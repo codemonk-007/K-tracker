@@ -3,11 +3,41 @@ const GistSync = (function() {
     const GITHUB_TOKEN_KEY = 'github_token';
     const FILENAME = 'k-tracker-sync.json';
     function showToast(msg, color) {
+        if (!document.getElementById('sync-toast-styles')) {
+            const style = document.createElement('style');
+            style.id = 'sync-toast-styles';
+            style.textContent = `
+                #sync-toast {
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    padding: 8px 16px;
+                    border-radius: 8px;
+                    font-size: 12px;
+                    font-weight: 600;
+                    color: white;
+                    z-index: 9999;
+                    transition: opacity 0.3s, top 0.3s, bottom 0.3s;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                    opacity: 0;
+                    pointer-events: none;
+                }
+                @media (max-width: 600px) {
+                    #sync-toast {
+                        bottom: auto;
+                        top: 20px;
+                        right: 50%;
+                        transform: translateX(50%);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
         let toast = document.getElementById('sync-toast');
         if (!toast) {
             toast = document.createElement('div');
             toast.id = 'sync-toast';
-            toast.style.cssText = 'position: fixed; bottom: 20px; right: 20px; padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; color: white; z-index: 9999; transition: opacity 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.15);';
             document.body.appendChild(toast);
         }
         toast.style.background = color;
