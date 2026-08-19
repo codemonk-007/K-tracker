@@ -2,7 +2,6 @@ const GistSync = (function() {
     const GIST_ID_KEY = 'gist_id';
     const GITHUB_TOKEN_KEY = 'github_token';
     const FILENAME = 'k-tracker-sync.json';
-
     function showToast(msg, color) {
         let toast = document.getElementById('sync-toast');
         if (!toast) {
@@ -14,28 +13,21 @@ const GistSync = (function() {
         toast.style.background = color;
         toast.textContent = msg;
         toast.style.opacity = '1';
-        
         if (window.toastTimeout) clearTimeout(window.toastTimeout);
         if (msg !== 'Syncing...' && msg !== 'Fetching...') {
             window.toastTimeout = setTimeout(() => { toast.style.opacity = '0'; }, 3000);
         }
     }
-
-    
     let remoteData = null; 
-
     function getCredentials() {
         return {
             id: localStorage.getItem(GIST_ID_KEY),
             token: localStorage.getItem(GITHUB_TOKEN_KEY)
         };
     }
-
     async function fetchGist() {
-        showToast("Fetching from Cloud...", "#f59e0b");
         const creds = getCredentials();
         if (!creds.id || !creds.token) return null;
-        
         try {
             const response = await fetch(`https://api.github.com/gists/${creds.id}?t=${Date.now()}`, {
                 cache: 'no-store',
@@ -48,12 +40,10 @@ const GistSync = (function() {
             if (data && data.files && data.files[FILENAME]) {
                 const content = data.files[FILENAME].content;
                 remoteData = content ? JSON.parse(content) : {};
-                showToast("Cloud Synced ☁️", "#22c55e");
                 return remoteData;
             } else if (data && data.files) {
                  // The file might not exist yet in a new gist, create it
                  remoteData = {};
-                 showToast("Cloud Synced ☁️", "#22c55e");
                 return remoteData;
             }
         } catch (e) {
@@ -61,14 +51,12 @@ const GistSync = (function() {
         }
         return null;
     }
-
     // Debounce save to prevent rate limiting
     let saveTimeout = null;
     async function saveToGist(dataObj) {
         showToast("Syncing...", "#3b82f6");
         const creds = getCredentials();
         if (!creds.id || !creds.token) return;
-        
         try {
             await fetch(`https://api.github.com/gists/${creds.id}`, {
                 method: 'PATCH',
@@ -91,7 +79,6 @@ const GistSync = (function() {
             console.error('Error saving gist', e);
         }
     }
-    
     return {
         init: async function() {
             return await fetchGist();
@@ -99,7 +86,6 @@ const GistSync = (function() {
         save: function(namespace, localState) {
             if (!remoteData) remoteData = {};
             remoteData[namespace] = localState;
-            
             if (saveTimeout) clearTimeout(saveTimeout);
             saveTimeout = setTimeout(() => {
                 saveToGist(remoteData);
