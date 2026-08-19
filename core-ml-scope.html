@@ -425,24 +425,52 @@ body {
 }
 
 @media (max-width: 600px) {
+    body {
+        padding-bottom: 70px;
+    }
     .nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: #ffffff;
+        border-top: 1px solid #e2e8f0;
+        z-index: 1000;
+        padding: 12px 10px;
+        box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
         justify-content: flex-start;
         flex-wrap: nowrap;
         overflow-x: auto;
-        padding-bottom: 6px;
         -webkit-overflow-scrolling: touch;
-        scrollbar-width: none; /* Firefox */
+        scrollbar-width: none;
+        margin-bottom: 0;
     }
-    .nav::-webkit-scrollbar { display: none; } /* Chrome */
+    .nav::-webkit-scrollbar { display: none; }
     .nav a {
         white-space: nowrap;
         flex-shrink: 0;
+        border: none;
+        background: transparent;
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+    .nav a.active {
+        background: #0f172a;
+        color: white;
     }
 }
 </style>
 
 <script src="sync.js"></script>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="K-Tracker">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%230f172a%22/><text y=%2260%22 x=%2235%22 font-size=%2240%22 fill=%22white%22 font-family=%22sans-serif%22>K</text></svg>">
 </head>
+
 <body>
 <nav class="nav">
     <a href="index.html">🏠 Home</a>
@@ -1724,5 +1752,14 @@ body {
     });
 })();
 </script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js');
+  });
+}
+</script>
 </body>
+
 </html>

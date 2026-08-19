@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Master Study Tracker</title>
+<title>Master Scope</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 :root {
@@ -45,7 +45,15 @@ body {
 }
 </style>
 <script src="sync.js"></script>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="K-Tracker">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%230f172a%22/><text y=%2260%22 x=%2235%22 font-size=%2240%22 fill=%22white%22 font-family=%22sans-serif%22>K</text></svg>">
 </head>
+
 <body>
 <div class="container">
     <div class="header">
@@ -156,6 +164,15 @@ function setupSync() {
     GistSync.setCredentials(id.trim(), token.trim());
 }
 </script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js');
+  });
+}
+</script>
 </body>
+
 
 </html>
