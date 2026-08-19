@@ -17,7 +17,8 @@ const GistSync = (function() {
         if (!creds.id || !creds.token) return null;
         
         try {
-            const response = await fetch(`https://api.github.com/gists/${creds.id}`, {
+            const response = await fetch(`https://api.github.com/gists/${creds.id}?t=${Date.now()}`, {
+                cache: 'no-store',
                 headers: {
                     'Authorization': `token ${creds.token}`,
                     'Accept': 'application/vnd.github.v3+json'
