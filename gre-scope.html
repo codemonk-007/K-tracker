@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GRE General Test — Master Scope</title>
+<title>Master Scope</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 :root {
@@ -1272,10 +1272,10 @@ body {
                 li.classList.remove('struck-through');
             }
         });
-        if (typeof updateProgress === 'function') updateProgress();
+        if (typeof updateProgress === 'function') updateProgress(true);
     }
 
-    function updateProgress() {
+    function updateProgress(skipSave = false) {
         var totalChecked = 0, totalItems = 0;
         document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
             totalItems++;
@@ -1289,7 +1289,7 @@ body {
         if (ot) ot.textContent = totalChecked + ' / ' + totalItems + ' (' + pct + '%)';
         var stats = {done: totalChecked, total: totalItems, pct: pct};
         localStorage.setItem(STORAGE_KEY + '-stats', JSON.stringify(stats));
-        if (typeof GistSync !== 'undefined') GistSync.save(STORAGE_KEY + '-stats', stats);
+        if (typeof GistSync !== 'undefined' && !skipSave) GistSync.save(STORAGE_KEY + '-stats', stats);
     }
 
     window.resetAll = function() {
@@ -1330,8 +1330,6 @@ body {
         });
         
         await loadState();
-
-        updateProgress();
         document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
             cb.addEventListener('change', function() {
                 saveState();

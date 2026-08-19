@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HLD & LLD — Master Learning & Practice</title>
+<title>Master Scope</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -2146,10 +2146,10 @@ function switchTab(name) {
         document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
             if (cb.id && data[cb.id]) cb.checked = true;
         });
-        if (typeof updateProgress === 'function') updateProgress();
+        if (typeof updateProgress === 'function') updateProgress(true);
     }
 
-    function updateProgress() {
+    function updateProgress(skipSave = false) {
         var totalChecked = 0, totalItems = 0;
         document.querySelectorAll('.card').forEach(function(card) {
             var cbs = card.querySelectorAll('input[type="checkbox"]');
@@ -2170,7 +2170,7 @@ function switchTab(name) {
         if (ot) ot.textContent = totalChecked + ' / ' + totalItems + ' (' + pct + '%)';
         var stats = {done: totalChecked, total: totalItems, pct: pct};
         localStorage.setItem(STORAGE_KEY + '-stats', JSON.stringify(stats));
-        if (typeof GistSync !== 'undefined') GistSync.save(STORAGE_KEY + '-stats', stats);
+        if (typeof GistSync !== 'undefined' && !skipSave) GistSync.save(STORAGE_KEY + '-stats', stats);
     }
 
     window.resetAll = function() {
@@ -2191,7 +2191,6 @@ function switchTab(name) {
     }
 
         await loadState();
-        updateProgress();
         document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
             cb.addEventListener('change', function() {
                 saveState();
@@ -2244,10 +2243,10 @@ if ('serviceWorker' in navigator) {
         document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
             if (cb.id && data[cb.id]) cb.checked = true;
         });
-        if (typeof updateProgress === 'function') updateProgress();
+        if (typeof updateProgress === 'function') updateProgress(true);
     }
 
-    function updateProgress() {
+    function updateProgress(skipSave = false) {
         var totalChecked = 0, totalItems = 0;
         document.querySelectorAll('.card').forEach(function(card) {
             var cbs = card.querySelectorAll('input[type="checkbox"]');
@@ -2268,7 +2267,7 @@ if ('serviceWorker' in navigator) {
         if (ot) ot.textContent = totalChecked + ' / ' + totalItems + ' (' + pct + '%)';
         var stats = {done: totalChecked, total: totalItems, pct: pct};
         localStorage.setItem(STORAGE_KEY + '-stats', JSON.stringify(stats));
-        if (typeof GistSync !== 'undefined') GistSync.save(STORAGE_KEY + '-stats', stats);
+        if (typeof GistSync !== 'undefined' && !skipSave) GistSync.save(STORAGE_KEY + '-stats', stats);
     }
 
     window.resetAll = function() {
@@ -2301,7 +2300,6 @@ if ('serviceWorker' in navigator) {
     }
 
         await loadState();
-        updateProgress();
         document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
             cb.addEventListener('change', function() {
                 saveState();
