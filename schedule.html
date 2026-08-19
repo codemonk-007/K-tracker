@@ -200,7 +200,24 @@ body {
     .card .task { font-size: 11px; }
     .card .detail { font-size: 9.5px; }
 }
+
+@media (max-width: 600px) {
+    .nav {
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 6px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; /* Firefox */
+    }
+    .nav::-webkit-scrollbar { display: none; } /* Chrome */
+    .nav a {
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+}
 </style>
+
 </head>
 <body>
 <nav class="nav">
