@@ -1244,6 +1244,7 @@ body {
                 li.classList.remove('struck-through');
             }
         });
+        if (typeof updateProgress === 'function') updateProgress();
     }
 
     function updateProgress() {
@@ -1258,6 +1259,9 @@ body {
         var pct = totalItems ? Math.round(totalChecked / totalItems * 100) : 0;
         if (of) of.style.width = pct + '%';
         if (ot) ot.textContent = totalChecked + ' / ' + totalItems + ' (' + pct + '%)';
+        var stats = {done: totalChecked, total: totalItems, pct: pct};
+        localStorage.setItem(STORAGE_KEY + '-stats', JSON.stringify(stats));
+        if (typeof GistSync !== 'undefined') GistSync.save(STORAGE_KEY + '-stats', stats);
     }
 
     window.resetAll = function() {
@@ -1277,6 +1281,13 @@ body {
     };
 
     document.addEventListener('DOMContentLoaded', async function() {
+
+    // Scroll active nav link into view on mobile
+    var activeNav = document.querySelector('.nav a.active');
+    if (activeNav) {
+        activeNav.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+
 
         // Strikethrough logic for small topics
         document.querySelectorAll('.info-list li').forEach(function(li, idx) {

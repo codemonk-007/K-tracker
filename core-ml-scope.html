@@ -1669,6 +1669,7 @@ body {
         document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
             if (cb.id && data[cb.id]) cb.checked = true;
         });
+        if (typeof updateProgress === 'function') updateProgress();
     }
 
     function updateProgress() {
@@ -1690,18 +1691,28 @@ body {
         var pct = totalItems ? Math.round(totalChecked / totalItems * 100) : 0;
         if (of) of.style.width = pct + '%';
         if (ot) ot.textContent = totalChecked + ' / ' + totalItems + ' (' + pct + '%)';
+        var stats = {done: totalChecked, total: totalItems, pct: pct};
+        localStorage.setItem(STORAGE_KEY + '-stats', JSON.stringify(stats));
+        if (typeof GistSync !== 'undefined') GistSync.save(STORAGE_KEY + '-stats', stats);
     }
 
     window.resetAll = function() {
         if (!confirm('Reset all progress on this page? This cannot be undone.')) return;
-        localStorage.removeItem(STORAGE_KEY);
         document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
             cb.checked = false;
         });
+        saveState();
         updateProgress();
     };
 
     document.addEventListener('DOMContentLoaded', async function() {
+
+    // Scroll active nav link into view on mobile
+    var activeNav = document.querySelector('.nav a.active');
+    if (activeNav) {
+        activeNav.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+
         await loadState();
         updateProgress();
         document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {

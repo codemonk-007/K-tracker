@@ -97,7 +97,7 @@ body {
         </a>
         <a href="dsa-tracker.html" class="card" id="card-dsa">
             <div class="card-top">
-                <h2>DSA — 200 Interview Practice</h2>
+                <h2>DSA — 250 Interview Practice</h2>
                 <span class="count" id="count-dsa">—</span>
             </div>
             <p>Targeted interview coverage across Arrays, Graphs, DP, Trees, and more. LeetCode and Codeforces links included.</p>
@@ -107,7 +107,7 @@ body {
     <div class="footer">Pure HTML/CSS/JS &middot; Progress saved in localStorage &middot; Works offline</div>
 </div>
 <script>
-(function() {
+(async function() {
     var keys = [
         { key: 'gre-checklist', fill: 'fill-gre', pct: 'pct-gre', count: 'count-gre' },
         { key: 'ai-swe-checklist', fill: 'fill-ai', pct: 'pct-ai', count: 'count-ai' },
@@ -115,26 +115,35 @@ body {
         { key: 'hld-lld-checklist', fill: 'fill-hld', pct: 'pct-hld', count: 'count-hld' },
         { key: 'dsa-checklist', fill: 'fill-dsa', pct: 'pct-dsa', count: 'count-dsa' }
     ];
+    
+    function renderStats(item, statsObj) {
+        if (!statsObj || typeof statsObj.total === 'undefined') return;
+        var f = document.getElementById(item.fill);
+        var p = document.getElementById(item.pct);
+        var c = document.getElementById(item.count);
+        if (f) f.style.width = statsObj.pct + '%';
+        if (p) p.textContent = statsObj.pct + '%';
+        if (c) c.textContent = statsObj.done + ' / ' + statsObj.total + ' done';
+    }
+    
+    // Load local stats instantly
     keys.forEach(function(item) {
         try {
-            var data = localStorage.getItem(item.key);
-            if (!data) {
-                document.getElementById(item.pct).textContent = '0%';
-                document.getElementById(item.count).textContent = '0 done';
-                return;
-            }
-            var checks = JSON.parse(data);
-            var total = Object.keys(checks).length;
-            var done = Object.values(checks).filter(function(v) { return v === true; }).length;
-            var pct = total > 0 ? Math.round(done / total * 100) : 0;
-            document.getElementById(item.fill).style.width = pct + '%';
-            document.getElementById(item.pct).textContent = pct + '%';
-            document.getElementById(item.count).textContent = done + ' / ' + total;
-        } catch(e) {
-            document.getElementById(item.pct).textContent = '0%';
-            document.getElementById(item.count).textContent = '0 done';
-        }
+            var local = localStorage.getItem(item.key + '-stats');
+            if (local) renderStats(item, JSON.parse(local));
+        } catch(e) {}
     });
+
+    // Fetch cloud stats
+    var remote = await GistSync.init();
+    if (remote) {
+        keys.forEach(function(item) {
+            if (remote[item.key + '-stats']) {
+                renderStats(item, remote[item.key + '-stats']);
+                localStorage.setItem(item.key + '-stats', JSON.stringify(remote[item.key + '-stats']));
+            }
+        });
+    }
 })();
 </script>
 

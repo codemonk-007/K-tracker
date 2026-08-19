@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DSA — 200 Interview Practice</title>
+<title>DSA — 250 Interview Practice</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -421,13 +421,19 @@ body {
     <a href="dsa-tracker.html" class="active">DSA Practice</a>
 </nav>
 <div class="page-header">
-    <h1>DSA &mdash; 200 Interview Practice</h1>
+    <h1>DSA &mdash; 250 Interview Practice</h1>
     <p class="subtitle">Broad interview coverage with pattern recognition focus. LC + Codeforces. Difficulty progression: Easy &rarr; Medium &rarr; Hard &rarr; Stretch.</p>
-    <p class="roles">200 Problems &middot; LC + Codeforces &middot; Easy &rarr; Medium &rarr; Hard</p>
+    <p class="roles">250 Problems &middot; LC + Codeforces &middot; Easy &rarr; Medium &rarr; Hard</p>
+    
     <div class="overall-progress">
         <div class="overall-bar"><div class="fill" id="overall-fill"></div></div>
         <span id="overall-text">0 / 0 (0%)</span>
         <button class="reset-btn" onclick="resetAll()">Reset All</button>
+    </div>
+    <div style="display: flex; gap: 16px; margin-top: 12px; font-size: 11px; font-weight: 700; justify-content: center; flex-wrap: wrap;">
+        <div style="background: var(--easy-bg); color: var(--easy-text); padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(34,197,94,0.2);">Easy: <span id="easy-count">0 / 0</span></div>
+        <div style="background: var(--med-bg); color: var(--med-text); padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(245,158,11,0.2);">Medium: <span id="med-count">0 / 0</span></div>
+        <div style="background: var(--hard-bg); color: var(--hard-text); padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(239,68,68,0.2);">Hard: <span id="hard-count">0 / 0</span></div>
     </div>
 </div>
 <div class="masonry-grid">
@@ -2277,6 +2283,7 @@ body {
         document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
             if (cb.id && data[cb.id]) cb.checked = true;
         });
+        if (typeof updateProgress === 'function') updateProgress();
     }
 
     function updateProgress() {
@@ -2298,18 +2305,59 @@ body {
         var pct = totalItems ? Math.round(totalChecked / totalItems * 100) : 0;
         if (of) of.style.width = pct + '%';
         if (ot) ot.textContent = totalChecked + ' / ' + totalItems + ' (' + pct + '%)';
+                var easy=0, easyT=0, med=0, medT=0, hard=0, hardT=0;
+        document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
+            var item = cb.closest('.item');
+            if (!item) return;
+            var isChecked = cb.checked;
+            var prev = item.previousElementSibling;
+            while(prev && !prev.classList.contains('difficulty-section')) {
+                prev = prev.previousElementSibling;
+            }
+            if (prev) {
+                if (prev.classList.contains('easy')) { easyT++; if(isChecked) easy++; }
+                else if (prev.classList.contains('med')) { medT++; if(isChecked) med++; }
+                else if (prev.classList.contains('hard')) { hardT++; if(isChecked) hard++; }
+            } else {
+                var card = item.closest('.card');
+                if (card) {
+                    var title = card.querySelector('.card-title').textContent.toLowerCase();
+                    if (title.includes('easy')) { easyT++; if(isChecked) easy++; }
+                    else if (title.includes('medium') || title.includes('stretch')) { medT++; if(isChecked) med++; }
+                    else if (title.includes('hard')) { hardT++; if(isChecked) hard++; }
+                }
+            }
+        });
+        
+        var ec = document.getElementById('easy-count');
+        var mc = document.getElementById('med-count');
+        var hc = document.getElementById('hard-count');
+        if (ec) ec.textContent = easy + ' / ' + easyT;
+        if (mc) mc.textContent = med + ' / ' + medT;
+        if (hc) hc.textContent = hard + ' / ' + hardT;
+
+        var stats = {done: totalChecked, total: totalItems, pct: pct};
+        localStorage.setItem(STORAGE_KEY + '-stats', JSON.stringify(stats));
+        if (typeof GistSync !== 'undefined') GistSync.save(STORAGE_KEY + '-stats', stats);
     }
 
     window.resetAll = function() {
         if (!confirm('Reset all progress on this page? This cannot be undone.')) return;
-        localStorage.removeItem(STORAGE_KEY);
         document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
             cb.checked = false;
         });
+        saveState();
         updateProgress();
     };
 
     document.addEventListener('DOMContentLoaded', async function() {
+
+    // Scroll active nav link into view on mobile
+    var activeNav = document.querySelector('.nav a.active');
+    if (activeNav) {
+        activeNav.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+
         await loadState();
         updateProgress();
         document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
