@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Master Study Tracker</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+:root {
+    --bg: #f1f5f9; --card: #ffffff; --text: #0f172a; --text-muted: #64748b;
+    --border: #e2e8f0; --progress-fill: #22c55e;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg); color: var(--text); min-height: 100vh;
+    display: flex; align-items: center; justify-content: center; padding: 30px;
+}
+.container { max-width: 700px; width: 100%; }
+.header { text-align: center; margin-bottom: 40px; }
+.header h1 { font-weight: 300; letter-spacing: 2px; font-size: 24px; text-transform: uppercase; margin-bottom: 8px; }
+.header p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+.cards { display: flex; flex-direction: column; gap: 16px; }
+.card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 24px; text-decoration: none; color: var(--text); display: block;
+    transition: all 0.2s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); border-color: #cbd5e1; }
+.card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+.card h2 { font-size: 16px; font-weight: 600; letter-spacing: 0.2px; }
+.card .count {
+    font-size: 11px; font-weight: 600; color: var(--text-muted); background: var(--bg);
+    padding: 4px 10px; border-radius: 6px; white-space: nowrap;
+}
+.card p { font-size: 12.5px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5; }
+.progress-row { display: flex; align-items: center; gap: 12px; }
+.progress-bar { flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.progress-bar .fill { height: 100%; background: linear-gradient(90deg, #22c55e, #4ade80); border-radius: 3px; transition: width 0.4s; width: 0%; }
+.progress-pct { font-size: 12px; font-weight: 600; color: var(--text-muted); min-width: 36px; text-align: right; font-variant-numeric: tabular-nums; }
+.footer { text-align: center; margin-top: 30px; font-size: 11.5px; color: #94a3b8; }
+@media (max-width: 600px) {
+    body { padding: 16px; align-items: flex-start; padding-top: 40px; }
+    .header h1 { font-size: 20px; } .card { padding: 18px; } .card h2 { font-size: 15px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Master Study Tracker</h1>
+        <p>GRE + AI/SWE + Core ML + System Design & DSA</p>
+    </div>
+    <div class="cards">
+
+        <a href="schedule.html" class="card" id="card-schedule" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%); color: white; border-color: #0f172a;">
+            <div class="card-top" style="margin-bottom: 0;">
+                <h2 style="color: white;">Master Weekly Planner</h2>
+                <span class="count" style="background: rgba(255,255,255,0.1); color: #cbd5e1;">Timeline</span>
+            </div>
+            <p style="color: #94a3b8; margin-bottom: 0; margin-top: 6px;">29h GRE Focus | 9.5h AI & SWE Interview Prep | 38.5h Total Study | 8h Protected Sleep</p>
+        </a>
+        <a href="gre-scope.html" class="card" id="card-gre">
+            <div class="card-top">
+                <h2>GRE General Test Scope</h2>
+                <span class="count" id="count-gre">—</span>
+            </div>
+            <p>Complete curriculum covering Quant (Arithmetic, Algebra, Geometry, Data) and Verbal (Vocabulary, TC, SE, RC) + AWA.</p>
+            <div class="progress-row"><div class="progress-bar"><div class="fill" id="fill-gre"></div></div><span class="progress-pct" id="pct-gre">—</span></div>
+        </a>
+        <a href="ai-swe-scope.html" class="card" id="card-ai">
+            <div class="card-top">
+                <h2>AI Software Engineer Scope</h2>
+                <span class="count" id="count-ai">—</span>
+            </div>
+            <p>LLM engineering, RAG, agents, production AI architecture, frontier APIs, system design, evaluation, and more.</p>
+            <div class="progress-row"><div class="progress-bar"><div class="fill" id="fill-ai"></div></div><span class="progress-pct" id="pct-ai">—</span></div>
+        </a>
+        <a href="core-ml-scope.html" class="card" id="card-ml">
+            <div class="card-top">
+                <h2>Core ML Engineering Scope</h2>
+                <span class="count" id="count-ml">—</span>
+            </div>
+            <p>Mathematics, classical ML, deep learning, PyTorch, NLP, CV, transformers, MLOps, model serving, ML system design.</p>
+            <div class="progress-row"><div class="progress-bar"><div class="fill" id="fill-ml"></div></div><span class="progress-pct" id="pct-ml">—</span></div>
+        </a>
+        <a href="hld-lld-tracker.html" class="card" id="card-hld">
+            <div class="card-top">
+                <h2>HLD & LLD Tracker</h2>
+                <span class="count" id="count-hld">—</span>
+            </div>
+            <p>System design fundamentals, databases, caching, distributed systems, OOP, SOLID, design patterns, and 30+ practice systems.</p>
+            <div class="progress-row"><div class="progress-bar"><div class="fill" id="fill-hld"></div></div><span class="progress-pct" id="pct-hld">—</span></div>
+        </a>
+        <a href="dsa-tracker.html" class="card" id="card-dsa">
+            <div class="card-top">
+                <h2>DSA — 200 Interview Practice</h2>
+                <span class="count" id="count-dsa">—</span>
+            </div>
+            <p>Targeted interview coverage across Arrays, Graphs, DP, Trees, and more. LeetCode and Codeforces links included.</p>
+            <div class="progress-row"><div class="progress-bar"><div class="fill" id="fill-dsa"></div></div><span class="progress-pct" id="pct-dsa">—</span></div>
+        </a>
+    </div>
+    <div class="footer">Pure HTML/CSS/JS &middot; Progress saved in localStorage &middot; Works offline</div>
+</div>
+<script>
+(function() {
+    var keys = [
+        { key: 'gre-checklist', fill: 'fill-gre', pct: 'pct-gre', count: 'count-gre' },
+        { key: 'ai-swe-checklist', fill: 'fill-ai', pct: 'pct-ai', count: 'count-ai' },
+        { key: 'core-ml-checklist', fill: 'fill-ml', pct: 'pct-ml', count: 'count-ml' },
+        { key: 'hld-lld-checklist', fill: 'fill-hld', pct: 'pct-hld', count: 'count-hld' },
+        { key: 'dsa-checklist', fill: 'fill-dsa', pct: 'pct-dsa', count: 'count-dsa' }
+    ];
+    keys.forEach(function(item) {
+        try {
+            var data = localStorage.getItem(item.key);
+            if (!data) {
+                document.getElementById(item.pct).textContent = '0%';
+                document.getElementById(item.count).textContent = '0 done';
+                return;
+            }
+            var checks = JSON.parse(data);
+            var total = Object.keys(checks).length;
+            var done = Object.values(checks).filter(function(v) { return v === true; }).length;
+            var pct = total > 0 ? Math.round(done / total * 100) : 0;
+            document.getElementById(item.fill).style.width = pct + '%';
+            document.getElementById(item.pct).textContent = pct + '%';
+            document.getElementById(item.count).textContent = done + ' / ' + total;
+        } catch(e) {
+            document.getElementById(item.pct).textContent = '0%';
+            document.getElementById(item.count).textContent = '0 done';
+        }
+    });
+})();
+</script>
+</body>
+</html>

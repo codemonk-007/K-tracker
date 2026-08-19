@@ -1,0 +1,2301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DSA — 200 Interview Practice</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --text: #0f172a;
+    --text-mid: #334155;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
+    --shadow-hover: 0 8px 25px rgba(0,0,0,0.08);
+
+    /* Priority accent colors */
+    --vh-accent: #ef4444; --vh-bg: #fef2f2; --vh-text: #991b1b; --vh-light: #fca5a5;
+    --h-accent: #f59e0b; --h-bg: #fffbeb; --h-text: #92400e; --h-light: #fcd34d;
+    --mh-accent: #06b6d4; --mh-bg: #ecfeff; --mh-text: #155e75; --mh-light: #67e8f9;
+    --m-accent: #10b981; --m-bg: #ecfdf5; --m-text: #065f46; --m-light: #6ee7b7;
+    --b-accent: #6366f1; --b-bg: #eef2ff; --b-text: #3730a3; --b-light: #a5b4fc;
+    --lit-accent: #a855f7; --lit-bg: #faf5ff; --lit-text: #6b21a8; --lit-light: #c084fc;
+    --special-accent: #ec4899; --special-bg: #fdf2f8; --special-text: #9d174d;
+
+    /* DSA difficulty */
+    --easy-accent: #22c55e; --easy-bg: #f0fdf4; --easy-text: #166534;
+    --med-accent: #f59e0b; --med-bg: #fffbeb; --med-text: #92400e;
+    --hard-accent: #ef4444; --hard-bg: #fef2f2; --hard-text: #991b1b;
+
+    --check-done: #22c55e;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 20px;
+    line-height: 1.5;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ===== NAVIGATION ===== */
+.nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+    font-size: 12px;
+}
+.nav a {
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: white;
+    font-weight: 500;
+    transition: all 0.15s ease;
+}
+.nav a.active {
+    background: var(--text);
+    color: white;
+    border-color: var(--text);
+}
+.nav a:hover:not(.active) { background: var(--border-light); border-color: #cbd5e1; }
+
+/* ===== DARK GRADIENT HEADER ===== */
+.page-header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+    color: white;
+    padding: 28px 30px 24px;
+    border-radius: 14px;
+    margin-bottom: 22px;
+    position: relative;
+    overflow: hidden;
+}
+.page-header::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 40%;
+    background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.02) 100%);
+    pointer-events: none;
+}
+.page-header h1 {
+    font-weight: 300;
+    letter-spacing: 2px;
+    font-size: 20px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    color: #f1f5f9;
+}
+.page-header .subtitle {
+    font-size: 12px;
+    color: #94a3b8;
+    max-width: 650px;
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+.page-header .roles {
+    font-size: 10px;
+    color: #64748b;
+    margin-top: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.overall-progress {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+.overall-bar {
+    width: 200px;
+    height: 6px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 4px;
+    overflow: hidden;
+}
+.overall-bar .fill {
+    height: 100%;
+    background: linear-gradient(90deg, #22c55e, #4ade80);
+    border-radius: 4px;
+    transition: width 0.4s ease;
+    width: 0%;
+}
+#overall-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: #cbd5e1;
+    font-variant-numeric: tabular-nums;
+}
+.reset-btn {
+    font-size: 10px;
+    padding: 4px 12px;
+    border: 1px solid rgba(239,68,68,0.4);
+    color: #fca5a5;
+    background: rgba(239,68,68,0.1);
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.15s;
+}
+.reset-btn:hover { background: rgba(239,68,68,0.2); border-color: rgba(239,68,68,0.6); }
+
+/* ===== MASONRY GRID ===== */
+.masonry-grid {
+    column-count: 3;
+    column-gap: 16px;
+}
+
+/* ===== CARDS WITH LEFT BORDER ===== */
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 16px 12px;
+    margin-bottom: 16px;
+    break-inside: avoid;
+    box-shadow: var(--shadow);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-1px);
+}
+/* Card accent borders by priority */
+.card.vh { border-left-color: var(--vh-accent); }
+.card.h { border-left-color: var(--h-accent); }
+.card.mh { border-left-color: var(--mh-accent); }
+.card.m { border-left-color: var(--m-accent); }
+
+/* Card header */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 8px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid var(--border-light);
+    gap: 8px;
+}
+.card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+}
+.card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+.progress-text {
+    font-size: 11px;
+    color: var(--text-light);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Card progress bar */
+.card-progress {
+    height: 3px;
+    background: var(--border-light);
+    border-radius: 2px;
+    margin: 6px 0 10px;
+    overflow: hidden;
+}
+.card-progress .fill {
+    height: 100%;
+    background: var(--check-done);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+    width: 0%;
+}
+
+/* ===== DSA SPECIFIC ===== */
+.difficulty-section {
+    margin: 8px 0 6px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.difficulty-section .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+.difficulty-section.easy .dot { background: var(--easy-accent); }
+.difficulty-section.easy { color: var(--easy-text); }
+.difficulty-section.med .dot { background: var(--med-accent); }
+.difficulty-section.med { color: var(--med-text); }
+.difficulty-section.hard .dot { background: var(--hard-accent); }
+.difficulty-section.hard { color: var(--hard-text); }
+
+/* ===== CLUSTERED CHECKBOX ITEMS ===== */
+.item {
+    display: flex;
+    align-items: flex-start;
+    padding: 5px 0;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    border-radius: 6px;
+    margin: 0 -4px;
+    padding-left: 4px;
+    padding-right: 4px;
+    transition: background 0.1s;
+}
+.item:hover { background: var(--border-light); }
+.item input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0; height: 0;
+}
+.item .check {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #cbd5e1;
+    border-radius: 50%;
+    margin-right: 10px;
+    margin-top: 1px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+.item:hover .check { border-color: #94a3b8; }
+.item input:checked + .check {
+    background: var(--check-done);
+    border-color: var(--check-done);
+    animation: checkPop 0.2s ease;
+}
+@keyframes checkPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+.item input:checked + .check::after {
+    content: '✓';
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.item input:checked ~ .item-text {
+    text-decoration: line-through;
+    color: #b0b0b0;
+}
+
+.item-text {
+    font-size: 12px;
+    color: var(--text-mid);
+    line-height: 1.4;
+    flex: 1;
+}
+
+.item .problem-link {
+    color: var(--text-light);
+    font-size: 10px;
+    font-weight: 500;
+    margin-left: auto;
+    padding-left: 8px;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+.item .problem-link:hover { color: var(--text-muted); text-decoration: underline; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1100px) {
+    .masonry-grid { column-count: 2; }
+}
+@media (max-width: 700px) {
+    body { padding: 10px; }
+    .masonry-grid { column-count: 1; }
+    .page-header { padding: 20px 18px; border-radius: 10px; }
+    .page-header h1 { font-size: 15px; letter-spacing: 1px; }
+    .page-header .subtitle { font-size: 11px; }
+    .item {
+        padding: 7px 4px;
+    }
+    .item .check {
+        width: 22px;
+        height: 22px;
+        margin-right: 12px;
+        margin-top: 0;
+    }
+    .item input:checked + .check::after { font-size: 13px; }
+    .card { padding: 14px; border-radius: 8px; }
+    .card-title { font-size: 14px; }
+    .nav { gap: 4px; }
+    .nav a { padding: 7px 10px; font-size: 11px; }
+    .overall-bar { width: 120px; }
+}
+
+/* ===== PRINT ===== */
+@media print {
+    @page { margin: 10mm; }
+    body { padding: 0; background: white !important; }
+    .nav, .reset-btn, .overall-progress, .card-progress, .tabs { display: none !important; }
+    .page-header { background: none !important; color: black !important; border: 2px solid #ccc; padding: 15px; margin-bottom: 20px; }
+    .page-header h1 { color: black !important; }
+    .page-header p, .page-header .subtitle, .page-header .roles { color: #333 !important; }
+    
+    /* Disable multi-column in print to prevent Chrome overlapping bug */
+    .masonry-grid { 
+        display: block !important;
+        column-count: auto !important; 
+    }
+    .card { 
+        break-inside: avoid !important; 
+        page-break-inside: avoid !important; 
+        box-shadow: none !important; 
+        border: 1px solid #aaa !important; 
+        padding: 12px !important; 
+        margin-bottom: 20px !important; 
+        -webkit-print-color-adjust: exact; 
+        print-color-adjust: exact;
+        display: block !important;
+        width: 100% !important;
+    }
+    
+    /* Ensure section headers don't cause blank pages and stick to their content */
+    .section-divider { 
+        page-break-before: auto !important; 
+        break-before: auto !important;
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+        margin-top: 30px !important; 
+    }
+}
+</style>
+</head>
+<body>
+<nav class="nav">
+    <a href="schedule.html">Schedule</a>
+    <a href="gre-scope.html">GRE Scope</a>
+    <a href="ai-swe-scope.html">AI/SWE Scope</a>
+    <a href="core-ml-scope.html">Core ML</a>
+    <a href="hld-lld-tracker.html">HLD & LLD</a>
+    <a href="dsa-tracker.html" class="active">DSA Practice</a>
+</nav>
+<div class="page-header">
+    <h1>DSA &mdash; 200 Interview Practice</h1>
+    <p class="subtitle">Broad interview coverage with pattern recognition focus. LC + Codeforces. Difficulty progression: Easy &rarr; Medium &rarr; Hard &rarr; Stretch.</p>
+    <p class="roles">200 Problems &middot; LC + Codeforces &middot; Easy &rarr; Medium &rarr; Hard</p>
+    <div class="overall-progress">
+        <div class="overall-bar"><div class="fill" id="overall-fill"></div></div>
+        <span id="overall-text">0 / 0 (0%)</span>
+        <button class="reset-btn" onclick="resetAll()">Reset All</button>
+    </div>
+</div>
+<div class="masonry-grid">
+<div class="card mh">
+    <div class="card-header">
+        <h3 class="card-title">Arrays & Hashing</h3>
+        <div class="card-meta">
+            <span class="progress-text">0/20</span>
+        </div>
+    </div>
+    <div class="card-progress"><div class="fill"></div></div>
+    <div class="card-body">
+        <div class="difficulty-section easy"><span class="dot"></span>Easy</div>
+        <label class="item">
+            <input type="checkbox" id="p-1">
+            <span class="check"></span>
+            <span class="item-text">Two Sum</span>
+            <a class="problem-link" href="https://leetcode.com/problems/two-sum/" target="_blank" rel="noopener">LC 1</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-2">
+            <span class="check"></span>
+            <span class="item-text">Contains Duplicate</span>
+            <a class="problem-link" href="https://leetcode.com/problems/contains-duplicate/" target="_blank" rel="noopener">LC 217</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-3">
+            <span class="check"></span>
+            <span class="item-text">Valid Anagram</span>
+            <a class="problem-link" href="https://leetcode.com/problems/valid-anagram/" target="_blank" rel="noopener">LC 242</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-4">
+            <span class="check"></span>
+            <span class="item-text">Majority Element</span>
+            <a class="problem-link" href="https://leetcode.com/problems/majority-element/" target="_blank" rel="noopener">LC 169</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-5">
+            <span class="check"></span>
+            <span class="item-text">Best Time to Buy and Sell Stock</span>
+            <a class="problem-link" href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock/" target="_blank" rel="noopener">LC 121</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-6">
+            <span class="check"></span>
+            <span class="item-text">Single Number</span>
+            <a class="problem-link" href="https://leetcode.com/problems/single-number/" target="_blank" rel="noopener">LC 136</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-7">
+            <span class="check"></span>
+            <span class="item-text">Missing Number</span>
+            <a class="problem-link" href="https://leetcode.com/problems/missing-number/" target="_blank" rel="noopener">LC 268</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-8">
+            <span class="check"></span>
+            <span class="item-text">Team</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/231/A" target="_blank" rel="noopener">CF 231A</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-9">
+            <span class="check"></span>
+            <span class="item-text">Next Round</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/158/A" target="_blank" rel="noopener">CF 158A</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-10">
+            <span class="check"></span>
+            <span class="item-text">Bit++</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/282/A" target="_blank" rel="noopener">CF 282A</a>
+        </label>
+        <div class="difficulty-section med"><span class="dot"></span>Medium</div>
+        <label class="item">
+            <input type="checkbox" id="p-11">
+            <span class="check"></span>
+            <span class="item-text">Group Anagrams</span>
+            <a class="problem-link" href="https://leetcode.com/problems/group-anagrams/" target="_blank" rel="noopener">LC 49</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-12">
+            <span class="check"></span>
+            <span class="item-text">Top K Frequent Elements</span>
+            <a class="problem-link" href="https://leetcode.com/problems/top-k-frequent-elements/" target="_blank" rel="noopener">LC 347</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-13">
+            <span class="check"></span>
+            <span class="item-text">Product of Array Except Self</span>
+            <a class="problem-link" href="https://leetcode.com/problems/product-of-array-except-self/" target="_blank" rel="noopener">LC 238</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-14">
+            <span class="check"></span>
+            <span class="item-text">Longest Consecutive Sequence</span>
+            <a class="problem-link" href="https://leetcode.com/problems/longest-consecutive-sequence/" target="_blank" rel="noopener">LC 128</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-15">
+            <span class="check"></span>
+            <span class="item-text">Subarray Sum Equals K</span>
+            <a class="problem-link" href="https://leetcode.com/problems/subarray-sum-equals-k/" target="_blank" rel="noopener">LC 560</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-16">
+            <span class="check"></span>
+            <span class="item-text">Valid Sudoku</span>
+            <a class="problem-link" href="https://leetcode.com/problems/valid-sudoku/" target="_blank" rel="noopener">LC 36</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-17">
+            <span class="check"></span>
+            <span class="item-text">Insert Delete GetRandom O(1)</span>
+            <a class="problem-link" href="https://leetcode.com/problems/insert-delete-getrandom-o-1/" target="_blank" rel="noopener">LC 380</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-18">
+            <span class="check"></span>
+            <span class="item-text">Find All Duplicates in an Array</span>
+            <a class="problem-link" href="https://leetcode.com/problems/find-all-duplicates-in-an-array/" target="_blank" rel="noopener">LC 442</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-19">
+            <span class="check"></span>
+            <span class="item-text">Contiguous Array</span>
+            <a class="problem-link" href="https://leetcode.com/problems/contiguous-array/" target="_blank" rel="noopener">LC 525</a>
+        </label>
+        <div class="difficulty-section hard"><span class="dot"></span>Hard</div>
+        <label class="item">
+            <input type="checkbox" id="p-20">
+            <span class="check"></span>
+            <span class="item-text">First Missing Positive</span>
+            <a class="problem-link" href="https://leetcode.com/problems/first-missing-positive/" target="_blank" rel="noopener">LC 41</a>
+        </label>
+    </div>
+</div>
+<div class="card mh">
+    <div class="card-header">
+        <h3 class="card-title">Two Pointers</h3>
+        <div class="card-meta">
+            <span class="progress-text">0/8</span>
+        </div>
+    </div>
+    <div class="card-progress"><div class="fill"></div></div>
+    <div class="card-body">
+        <div class="difficulty-section easy"><span class="dot"></span>Easy</div>
+        <label class="item">
+            <input type="checkbox" id="p-21">
+            <span class="check"></span>
+            <span class="item-text">Valid Palindrome</span>
+            <a class="problem-link" href="https://leetcode.com/problems/valid-palindrome/" target="_blank" rel="noopener">LC 125</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-22">
+            <span class="check"></span>
+            <span class="item-text">Is Subsequence</span>
+            <a class="problem-link" href="https://leetcode.com/problems/is-subsequence/" target="_blank" rel="noopener">LC 392</a>
+        </label>
+        <div class="difficulty-section med"><span class="dot"></span>Medium</div>
+        <label class="item">
+            <input type="checkbox" id="p-23">
+            <span class="check"></span>
+            <span class="item-text">Two Sum II</span>
+            <a class="problem-link" href="https://leetcode.com/problems/two-sum-ii/" target="_blank" rel="noopener">LC 167</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-24">
+            <span class="check"></span>
+            <span class="item-text">3Sum</span>
+            <a class="problem-link" href="https://leetcode.com/problems/3sum/" target="_blank" rel="noopener">LC 15</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-25">
+            <span class="check"></span>
+            <span class="item-text">Container With Most Water</span>
+            <a class="problem-link" href="https://leetcode.com/problems/container-with-most-water/" target="_blank" rel="noopener">LC 11</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-26">
+            <span class="check"></span>
+            <span class="item-text">Squares of a Sorted Array</span>
+            <a class="problem-link" href="https://leetcode.com/problems/squares-of-a-sorted-array/" target="_blank" rel="noopener">LC 977</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-27">
+            <span class="check"></span>
+            <span class="item-text">Minimum Size Subarray Sum</span>
+            <a class="problem-link" href="https://leetcode.com/problems/minimum-size-subarray-sum/" target="_blank" rel="noopener">LC 209</a>
+        </label>
+        <div class="difficulty-section hard"><span class="dot"></span>Hard</div>
+        <label class="item">
+            <input type="checkbox" id="p-28">
+            <span class="check"></span>
+            <span class="item-text">Trapping Rain Water</span>
+            <a class="problem-link" href="https://leetcode.com/problems/trapping-rain-water/" target="_blank" rel="noopener">LC 42</a>
+        </label>
+    </div>
+</div>
+<div class="card h">
+    <div class="card-header">
+        <h3 class="card-title">Sliding Window</h3>
+        <div class="card-meta">
+            <span class="progress-text">0/11</span>
+        </div>
+    </div>
+    <div class="card-progress"><div class="fill"></div></div>
+    <div class="card-body">
+        <div class="difficulty-section easy"><span class="dot"></span>Easy</div>
+        <label class="item">
+            <input type="checkbox" id="p-29">
+            <span class="check"></span>
+            <span class="item-text">Maximum Average Subarray I</span>
+            <a class="problem-link" href="https://leetcode.com/problems/maximum-average-subarray-i/" target="_blank" rel="noopener">LC 643</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-30">
+            <span class="check"></span>
+            <span class="item-text">Max Vowels in Substring</span>
+            <a class="problem-link" href="https://leetcode.com/problems/max-vowels-in-substring/" target="_blank" rel="noopener">LC 1456</a>
+        </label>
+        <div class="difficulty-section med"><span class="dot"></span>Medium</div>
+        <label class="item">
+            <input type="checkbox" id="p-31">
+            <span class="check"></span>
+            <span class="item-text">Longest Substring Without Repeating Characters</span>
+            <a class="problem-link" href="https://leetcode.com/problems/longest-substring-without-repeating-characters/" target="_blank" rel="noopener">LC 3</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-32">
+            <span class="check"></span>
+            <span class="item-text">Longest Repeating Character Replacement</span>
+            <a class="problem-link" href="https://leetcode.com/problems/longest-repeating-character-replacement/" target="_blank" rel="noopener">LC 424</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-33">
+            <span class="check"></span>
+            <span class="item-text">Permutation in String</span>
+            <a class="problem-link" href="https://leetcode.com/problems/permutation-in-string/" target="_blank" rel="noopener">LC 567</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-34">
+            <span class="check"></span>
+            <span class="item-text">Find All Anagrams in a String</span>
+            <a class="problem-link" href="https://leetcode.com/problems/find-all-anagrams-in-a-string/" target="_blank" rel="noopener">LC 438</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-35">
+            <span class="check"></span>
+            <span class="item-text">Subarray Product Less Than K</span>
+            <a class="problem-link" href="https://leetcode.com/problems/subarray-product-less-than-k/" target="_blank" rel="noopener">LC 713</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-36">
+            <span class="check"></span>
+            <span class="item-text">Fruit Into Baskets</span>
+            <a class="problem-link" href="https://leetcode.com/problems/fruit-into-baskets/" target="_blank" rel="noopener">LC 904</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-37">
+            <span class="check"></span>
+            <span class="item-text">Max Consecutive Ones III</span>
+            <a class="problem-link" href="https://leetcode.com/problems/max-consecutive-ones-iii/" target="_blank" rel="noopener">LC 1004</a>
+        </label>
+        <div class="difficulty-section hard"><span class="dot"></span>Hard</div>
+        <label class="item">
+            <input type="checkbox" id="p-38">
+            <span class="check"></span>
+            <span class="item-text">Minimum Window Substring</span>
+            <a class="problem-link" href="https://leetcode.com/problems/minimum-window-substring/" target="_blank" rel="noopener">LC 76</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-39">
+            <span class="check"></span>
+            <span class="item-text">Sliding Window Maximum</span>
+            <a class="problem-link" href="https://leetcode.com/problems/sliding-window-maximum/" target="_blank" rel="noopener">LC 239</a>
+        </label>
+    </div>
+</div>
+<div class="card mh">
+    <div class="card-header">
+        <h3 class="card-title">Stack / Monotonic Stack</h3>
+        <div class="card-meta">
+            <span class="progress-text">0/11</span>
+        </div>
+    </div>
+    <div class="card-progress"><div class="fill"></div></div>
+    <div class="card-body">
+        <div class="difficulty-section easy"><span class="dot"></span>Easy</div>
+        <label class="item">
+            <input type="checkbox" id="p-40">
+            <span class="check"></span>
+            <span class="item-text">Valid Parentheses</span>
+            <a class="problem-link" href="https://leetcode.com/problems/valid-parentheses/" target="_blank" rel="noopener">LC 20</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-41">
+            <span class="check"></span>
+            <span class="item-text">Min Stack</span>
+            <a class="problem-link" href="https://leetcode.com/problems/min-stack/" target="_blank" rel="noopener">LC 155</a>
+        </label>
+        <div class="difficulty-section med"><span class="dot"></span>Medium</div>
+        <label class="item">
+            <input type="checkbox" id="p-42">
+            <span class="check"></span>
+            <span class="item-text">Evaluate Reverse Polish Notation</span>
+            <a class="problem-link" href="https://leetcode.com/problems/evaluate-reverse-polish-notation/" target="_blank" rel="noopener">LC 150</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-43">
+            <span class="check"></span>
+            <span class="item-text">Daily Temperatures</span>
+            <a class="problem-link" href="https://leetcode.com/problems/daily-temperatures/" target="_blank" rel="noopener">LC 739</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-44">
+            <span class="check"></span>
+            <span class="item-text">Car Fleet</span>
+            <a class="problem-link" href="https://leetcode.com/problems/car-fleet/" target="_blank" rel="noopener">LC 853</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-45">
+            <span class="check"></span>
+            <span class="item-text">Remove K Digits</span>
+            <a class="problem-link" href="https://leetcode.com/problems/remove-k-digits/" target="_blank" rel="noopener">LC 402</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-46">
+            <span class="check"></span>
+            <span class="item-text">Next Greater Element II</span>
+            <a class="problem-link" href="https://leetcode.com/problems/next-greater-element-ii/" target="_blank" rel="noopener">LC 503</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-47">
+            <span class="check"></span>
+            <span class="item-text">Online Stock Span</span>
+            <a class="problem-link" href="https://leetcode.com/problems/online-stock-span/" target="_blank" rel="noopener">LC 901</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-48">
+            <span class="check"></span>
+            <span class="item-text">Next Greater Element I</span>
+            <a class="problem-link" href="https://leetcode.com/problems/next-greater-element-i/" target="_blank" rel="noopener">LC 496</a>
+        </label>
+        <div class="difficulty-section hard"><span class="dot"></span>Hard</div>
+        <label class="item">
+            <input type="checkbox" id="p-49">
+            <span class="check"></span>
+            <span class="item-text">Largest Rectangle in Histogram</span>
+            <a class="problem-link" href="https://leetcode.com/problems/largest-rectangle-in-histogram/" target="_blank" rel="noopener">LC 84</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-50">
+            <span class="check"></span>
+            <span class="item-text">Trapping Rain Water</span>
+            <a class="problem-link" href="https://leetcode.com/problems/trapping-rain-water/" target="_blank" rel="noopener">LC 42</a>
+        </label>
+    </div>
+</div>
+<div class="card h">
+    <div class="card-header">
+        <h3 class="card-title">Binary Search</h3>
+        <div class="card-meta">
+            <span class="progress-text">0/15</span>
+        </div>
+    </div>
+    <div class="card-progress"><div class="fill"></div></div>
+    <div class="card-body">
+        <div class="difficulty-section easy"><span class="dot"></span>Easy</div>
+        <label class="item">
+            <input type="checkbox" id="p-51">
+            <span class="check"></span>
+            <span class="item-text">Binary Search</span>
+            <a class="problem-link" href="https://leetcode.com/problems/binary-search/" target="_blank" rel="noopener">LC 704</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-52">
+            <span class="check"></span>
+            <span class="item-text">Search Insert Position</span>
+            <a class="problem-link" href="https://leetcode.com/problems/search-insert-position/" target="_blank" rel="noopener">LC 35</a>
+        </label>
+        <div class="difficulty-section med"><span class="dot"></span>Medium</div>
+        <label class="item">
+            <input type="checkbox" id="p-53">
+            <span class="check"></span>
+            <span class="item-text">Search a 2D Matrix</span>
+            <a class="problem-link" href="https://leetcode.com/problems/search-a-2d-matrix/" target="_blank" rel="noopener">LC 74</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-54">
+            <span class="check"></span>
+            <span class="item-text">Koko Eating Bananas</span>
+            <a class="problem-link" href="https://leetcode.com/problems/koko-eating-bananas/" target="_blank" rel="noopener">LC 875</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-55">
+            <span class="check"></span>
+            <span class="item-text">Find Min in Rotated Sorted Array</span>
+            <a class="problem-link" href="https://leetcode.com/problems/find-min-in-rotated-sorted-array/" target="_blank" rel="noopener">LC 153</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-56">
+            <span class="check"></span>
+            <span class="item-text">Search in Rotated Sorted Array</span>
+            <a class="problem-link" href="https://leetcode.com/problems/search-in-rotated-sorted-array/" target="_blank" rel="noopener">LC 33</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-57">
+            <span class="check"></span>
+            <span class="item-text">Time Based Key-Value Store</span>
+            <a class="problem-link" href="https://leetcode.com/problems/time-based-key-value-store/" target="_blank" rel="noopener">LC 981</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-58">
+            <span class="check"></span>
+            <span class="item-text">Find Peak Element</span>
+            <a class="problem-link" href="https://leetcode.com/problems/find-peak-element/" target="_blank" rel="noopener">LC 162</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-59">
+            <span class="check"></span>
+            <span class="item-text">Find First and Last Position</span>
+            <a class="problem-link" href="https://leetcode.com/problems/find-first-and-last-position/" target="_blank" rel="noopener">LC 34</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-60">
+            <span class="check"></span>
+            <span class="item-text">Single Element in Sorted Array</span>
+            <a class="problem-link" href="https://leetcode.com/problems/single-element-in-sorted-array/" target="_blank" rel="noopener">LC 540</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-61">
+            <span class="check"></span>
+            <span class="item-text">Capacity to Ship Packages</span>
+            <a class="problem-link" href="https://leetcode.com/problems/capacity-to-ship-packages/" target="_blank" rel="noopener">LC 1011</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-62">
+            <span class="check"></span>
+            <span class="item-text">Min Days to Make m Bouquets</span>
+            <a class="problem-link" href="https://leetcode.com/problems/min-days-to-make-m-bouquets/" target="_blank" rel="noopener">LC 1482</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-63">
+            <span class="check"></span>
+            <span class="item-text">Kth Smallest in Sorted Matrix</span>
+            <a class="problem-link" href="https://leetcode.com/problems/kth-smallest-in-sorted-matrix/" target="_blank" rel="noopener">LC 378</a>
+        </label>
+        <div class="difficulty-section hard"><span class="dot"></span>Hard</div>
+        <label class="item">
+            <input type="checkbox" id="p-64">
+            <span class="check"></span>
+            <span class="item-text">Median of Two Sorted Arrays</span>
+            <a class="problem-link" href="https://leetcode.com/problems/median-of-two-sorted-arrays/" target="_blank" rel="noopener">LC 4</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-65">
+            <span class="check"></span>
+            <span class="item-text">Split Array Largest Sum</span>
+            <a class="problem-link" href="https://leetcode.com/problems/split-array-largest-sum/" target="_blank" rel="noopener">LC 410</a>
+        </label>
+    </div>
+</div>
+<div class="card mh">
+    <div class="card-header">
+        <h3 class="card-title">Linked List</h3>
+        <div class="card-meta">
+            <span class="progress-text">0/13</span>
+        </div>
+    </div>
+    <div class="card-progress"><div class="fill"></div></div>
+    <div class="card-body">
+        <div class="difficulty-section easy"><span class="dot"></span>Easy</div>
+        <label class="item">
+            <input type="checkbox" id="p-66">
+            <span class="check"></span>
+            <span class="item-text">Reverse Linked List</span>
+            <a class="problem-link" href="https://leetcode.com/problems/reverse-linked-list/" target="_blank" rel="noopener">LC 206</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-67">
+            <span class="check"></span>
+            <span class="item-text">Merge Two Sorted Lists</span>
+            <a class="problem-link" href="https://leetcode.com/problems/merge-two-sorted-lists/" target="_blank" rel="noopener">LC 21</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-68">
+            <span class="check"></span>
+            <span class="item-text">Linked List Cycle</span>
+            <a class="problem-link" href="https://leetcode.com/problems/linked-list-cycle/" target="_blank" rel="noopener">LC 141</a>
+        </label>
+        <div class="difficulty-section med"><span class="dot"></span>Medium</div>
+        <label class="item">
+            <input type="checkbox" id="p-69">
+            <span class="check"></span>
+            <span class="item-text">Remove Nth Node From End</span>
+            <a class="problem-link" href="https://leetcode.com/problems/remove-nth-node-from-end/" target="_blank" rel="noopener">LC 19</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-70">
+            <span class="check"></span>
+            <span class="item-text">Reorder List</span>
+            <a class="problem-link" href="https://leetcode.com/problems/reorder-list/" target="_blank" rel="noopener">LC 143</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-71">
+            <span class="check"></span>
+            <span class="item-text">Add Two Numbers</span>
+            <a class="problem-link" href="https://leetcode.com/problems/add-two-numbers/" target="_blank" rel="noopener">LC 2</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-72">
+            <span class="check"></span>
+            <span class="item-text">Copy List With Random Pointer</span>
+            <a class="problem-link" href="https://leetcode.com/problems/copy-list-with-random-pointer/" target="_blank" rel="noopener">LC 138</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-73">
+            <span class="check"></span>
+            <span class="item-text">LRU Cache</span>
+            <a class="problem-link" href="https://leetcode.com/problems/lru-cache/" target="_blank" rel="noopener">LC 146</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-74">
+            <span class="check"></span>
+            <span class="item-text">Rotate List</span>
+            <a class="problem-link" href="https://leetcode.com/problems/rotate-list/" target="_blank" rel="noopener">LC 61</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-75">
+            <span class="check"></span>
+            <span class="item-text">Odd Even Linked List</span>
+            <a class="problem-link" href="https://leetcode.com/problems/odd-even-linked-list/" target="_blank" rel="noopener">LC 328</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-76">
+            <span class="check"></span>
+            <span class="item-text">Reverse Linked List II</span>
+            <a class="problem-link" href="https://leetcode.com/problems/reverse-linked-list-ii/" target="_blank" rel="noopener">LC 92</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-77">
+            <span class="check"></span>
+            <span class="item-text">Partition List</span>
+            <a class="problem-link" href="https://leetcode.com/problems/partition-list/" target="_blank" rel="noopener">LC 86</a>
+        </label>
+        <div class="difficulty-section hard"><span class="dot"></span>Hard</div>
+        <label class="item">
+            <input type="checkbox" id="p-78">
+            <span class="check"></span>
+            <span class="item-text">Merge K Sorted Lists</span>
+            <a class="problem-link" href="https://leetcode.com/problems/merge-k-sorted-lists/" target="_blank" rel="noopener">LC 23</a>
+        </label>
+    </div>
+</div>
+<div class="card h">
+    <div class="card-header">
+        <h3 class="card-title">Trees / BST</h3>
+        <div class="card-meta">
+            <span class="progress-text">0/18</span>
+        </div>
+    </div>
+    <div class="card-progress"><div class="fill"></div></div>
+    <div class="card-body">
+        <div class="difficulty-section easy"><span class="dot"></span>Easy</div>
+        <label class="item">
+            <input type="checkbox" id="p-79">
+            <span class="check"></span>
+            <span class="item-text">Maximum Depth of Binary Tree</span>
+            <a class="problem-link" href="https://leetcode.com/problems/maximum-depth-of-binary-tree/" target="_blank" rel="noopener">LC 104</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-80">
+            <span class="check"></span>
+            <span class="item-text">Invert Binary Tree</span>
+            <a class="problem-link" href="https://leetcode.com/problems/invert-binary-tree/" target="_blank" rel="noopener">LC 226</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-81">
+            <span class="check"></span>
+            <span class="item-text">Same Tree</span>
+            <a class="problem-link" href="https://leetcode.com/problems/same-tree/" target="_blank" rel="noopener">LC 100</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-82">
+            <span class="check"></span>
+            <span class="item-text">Subtree of Another Tree</span>
+            <a class="problem-link" href="https://leetcode.com/problems/subtree-of-another-tree/" target="_blank" rel="noopener">LC 572</a>
+        </label>
+        <div class="difficulty-section med"><span class="dot"></span>Medium</div>
+        <label class="item">
+            <input type="checkbox" id="p-83">
+            <span class="check"></span>
+            <span class="item-text">Binary Tree Level Order Traversal</span>
+            <a class="problem-link" href="https://leetcode.com/problems/binary-tree-level-order-traversal/" target="_blank" rel="noopener">LC 102</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-84">
+            <span class="check"></span>
+            <span class="item-text">Validate BST</span>
+            <a class="problem-link" href="https://leetcode.com/problems/validate-bst/" target="_blank" rel="noopener">LC 98</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-85">
+            <span class="check"></span>
+            <span class="item-text">Kth Smallest in BST</span>
+            <a class="problem-link" href="https://leetcode.com/problems/kth-smallest-in-bst/" target="_blank" rel="noopener">LC 230</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-86">
+            <span class="check"></span>
+            <span class="item-text">LCA of BST</span>
+            <a class="problem-link" href="https://leetcode.com/problems/lca-of-bst/" target="_blank" rel="noopener">LC 235</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-87">
+            <span class="check"></span>
+            <span class="item-text">Binary Tree Right Side View</span>
+            <a class="problem-link" href="https://leetcode.com/problems/binary-tree-right-side-view/" target="_blank" rel="noopener">LC 199</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-88">
+            <span class="check"></span>
+            <span class="item-text">Diameter of Binary Tree</span>
+            <a class="problem-link" href="https://leetcode.com/problems/diameter-of-binary-tree/" target="_blank" rel="noopener">LC 543</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-89">
+            <span class="check"></span>
+            <span class="item-text">Construct from Preorder & Inorder</span>
+            <a class="problem-link" href="https://leetcode.com/problems/construct-from-preorder-inorder/" target="_blank" rel="noopener">LC 105</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-90">
+            <span class="check"></span>
+            <span class="item-text">LCA of Binary Tree</span>
+            <a class="problem-link" href="https://leetcode.com/problems/lca-of-binary-tree/" target="_blank" rel="noopener">LC 236</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-91">
+            <span class="check"></span>
+            <span class="item-text">Path Sum III</span>
+            <a class="problem-link" href="https://leetcode.com/problems/path-sum-iii/" target="_blank" rel="noopener">LC 437</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-92">
+            <span class="check"></span>
+            <span class="item-text">Maximum Width of Binary Tree</span>
+            <a class="problem-link" href="https://leetcode.com/problems/maximum-width-of-binary-tree/" target="_blank" rel="noopener">LC 662</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-93">
+            <span class="check"></span>
+            <span class="item-text">Delete Node in BST</span>
+            <a class="problem-link" href="https://leetcode.com/problems/delete-node-in-bst/" target="_blank" rel="noopener">LC 450</a>
+        </label>
+        <div class="difficulty-section hard"><span class="dot"></span>Hard</div>
+        <label class="item">
+            <input type="checkbox" id="p-94">
+            <span class="check"></span>
+            <span class="item-text">Serialize and Deserialize Binary Tree</span>
+            <a class="problem-link" href="https://leetcode.com/problems/serialize-and-deserialize-binary-tree/" target="_blank" rel="noopener">LC 297</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-95">
+            <span class="check"></span>
+            <span class="item-text">Binary Tree Maximum Path Sum</span>
+            <a class="problem-link" href="https://leetcode.com/problems/binary-tree-maximum-path-sum/" target="_blank" rel="noopener">LC 124</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-96">
+            <span class="check"></span>
+            <span class="item-text">Binary Tree Cameras</span>
+            <a class="problem-link" href="https://leetcode.com/problems/binary-tree-cameras/" target="_blank" rel="noopener">LC 968</a>
+        </label>
+    </div>
+</div>
+<div class="card h">
+    <div class="card-header">
+        <h3 class="card-title">Heap / Priority Queue</h3>
+        <div class="card-meta">
+            <span class="progress-text">0/12</span>
+        </div>
+    </div>
+    <div class="card-progress"><div class="fill"></div></div>
+    <div class="card-body">
+        <div class="difficulty-section easy"><span class="dot"></span>Easy</div>
+        <label class="item">
+            <input type="checkbox" id="p-97">
+            <span class="check"></span>
+            <span class="item-text">Last Stone Weight</span>
+            <a class="problem-link" href="https://leetcode.com/problems/last-stone-weight/" target="_blank" rel="noopener">LC 1046</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-98">
+            <span class="check"></span>
+            <span class="item-text">Kth Largest Element in Stream</span>
+            <a class="problem-link" href="https://leetcode.com/problems/kth-largest-element-in-stream/" target="_blank" rel="noopener">LC 703</a>
+        </label>
+        <div class="difficulty-section med"><span class="dot"></span>Medium</div>
+        <label class="item">
+            <input type="checkbox" id="p-99">
+            <span class="check"></span>
+            <span class="item-text">Kth Largest Element in Array</span>
+            <a class="problem-link" href="https://leetcode.com/problems/kth-largest-element-in-array/" target="_blank" rel="noopener">LC 215</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-100">
+            <span class="check"></span>
+            <span class="item-text">K Closest Points to Origin</span>
+            <a class="problem-link" href="https://leetcode.com/problems/k-closest-points-to-origin/" target="_blank" rel="noopener">LC 973</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-101">
+            <span class="check"></span>
+            <span class="item-text">Task Scheduler</span>
+            <a class="problem-link" href="https://leetcode.com/problems/task-scheduler/" target="_blank" rel="noopener">LC 621</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-102">
+            <span class="check"></span>
+            <span class="item-text">Kth Smallest in Sorted Matrix</span>
+            <a class="problem-link" href="https://leetcode.com/problems/kth-smallest-in-sorted-matrix/" target="_blank" rel="noopener">LC 378</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-103">
+            <span class="check"></span>
+            <span class="item-text">Find Median from Data Stream</span>
+            <a class="problem-link" href="https://leetcode.com/problems/find-median-from-data-stream/" target="_blank" rel="noopener">LC 295</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-104">
+            <span class="check"></span>
+            <span class="item-text">Top K Frequent Words</span>
+            <a class="problem-link" href="https://leetcode.com/problems/top-k-frequent-words/" target="_blank" rel="noopener">LC 692</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-105">
+            <span class="check"></span>
+            <span class="item-text">Reorganize String</span>
+            <a class="problem-link" href="https://leetcode.com/problems/reorganize-string/" target="_blank" rel="noopener">LC 767</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-106">
+            <span class="check"></span>
+            <span class="item-text">Single-Threaded CPU</span>
+            <a class="problem-link" href="https://leetcode.com/problems/single-threaded-cpu/" target="_blank" rel="noopener">LC 1834</a>
+        </label>
+        <div class="difficulty-section hard"><span class="dot"></span>Hard</div>
+        <label class="item">
+            <input type="checkbox" id="p-107">
+            <span class="check"></span>
+            <span class="item-text">Sliding Window Median</span>
+            <a class="problem-link" href="https://leetcode.com/problems/sliding-window-median/" target="_blank" rel="noopener">LC 480</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-108">
+            <span class="check"></span>
+            <span class="item-text">Smallest Range from K Lists</span>
+            <a class="problem-link" href="https://leetcode.com/problems/smallest-range-from-k-lists/" target="_blank" rel="noopener">LC 632</a>
+        </label>
+    </div>
+</div>
+<div class="card h">
+    <div class="card-header">
+        <h3 class="card-title">Intervals</h3>
+        <div class="card-meta">
+            <span class="progress-text">0/9</span>
+        </div>
+    </div>
+    <div class="card-progress"><div class="fill"></div></div>
+    <div class="card-body">
+        <div class="difficulty-section easy"><span class="dot"></span>Easy</div>
+        <label class="item">
+            <input type="checkbox" id="p-109">
+            <span class="check"></span>
+            <span class="item-text">Meeting Rooms</span>
+            <a class="problem-link" href="https://leetcode.com/problems/meeting-rooms/" target="_blank" rel="noopener">LC 252</a>
+        </label>
+        <div class="difficulty-section med"><span class="dot"></span>Medium</div>
+        <label class="item">
+            <input type="checkbox" id="p-110">
+            <span class="check"></span>
+            <span class="item-text">Merge Intervals</span>
+            <a class="problem-link" href="https://leetcode.com/problems/merge-intervals/" target="_blank" rel="noopener">LC 56</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-111">
+            <span class="check"></span>
+            <span class="item-text">Insert Interval</span>
+            <a class="problem-link" href="https://leetcode.com/problems/insert-interval/" target="_blank" rel="noopener">LC 57</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-112">
+            <span class="check"></span>
+            <span class="item-text">Non-overlapping Intervals</span>
+            <a class="problem-link" href="https://leetcode.com/problems/non-overlapping-intervals/" target="_blank" rel="noopener">LC 435</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-113">
+            <span class="check"></span>
+            <span class="item-text">Meeting Rooms II</span>
+            <a class="problem-link" href="https://leetcode.com/problems/meeting-rooms-ii/" target="_blank" rel="noopener">LC 253</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-114">
+            <span class="check"></span>
+            <span class="item-text">Min Interval to Include Each Query</span>
+            <a class="problem-link" href="https://leetcode.com/problems/min-interval-to-include-each-query/" target="_blank" rel="noopener">LC 1851</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-115">
+            <span class="check"></span>
+            <span class="item-text">Interval List Intersections</span>
+            <a class="problem-link" href="https://leetcode.com/problems/interval-list-intersections/" target="_blank" rel="noopener">LC 986</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-116">
+            <span class="check"></span>
+            <span class="item-text">Min Arrows to Burst Balloons</span>
+            <a class="problem-link" href="https://leetcode.com/problems/min-arrows-to-burst-balloons/" target="_blank" rel="noopener">LC 452</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-117">
+            <span class="check"></span>
+            <span class="item-text">Remove Covered Intervals</span>
+            <a class="problem-link" href="https://leetcode.com/problems/remove-covered-intervals/" target="_blank" rel="noopener">LC 1288</a>
+        </label>
+    </div>
+</div>
+<div class="card h">
+    <div class="card-header">
+        <h3 class="card-title">Greedy</h3>
+        <div class="card-meta">
+            <span class="progress-text">0/10</span>
+        </div>
+    </div>
+    <div class="card-progress"><div class="fill"></div></div>
+    <div class="card-body">
+        <div class="difficulty-section easy"><span class="dot"></span>Easy</div>
+        <label class="item">
+            <input type="checkbox" id="p-118">
+            <span class="check"></span>
+            <span class="item-text">Best Time to Buy and Sell Stock</span>
+            <a class="problem-link" href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock/" target="_blank" rel="noopener">LC 121</a>
+        </label>
+        <div class="difficulty-section med"><span class="dot"></span>Medium</div>
+        <label class="item">
+            <input type="checkbox" id="p-119">
+            <span class="check"></span>
+            <span class="item-text">Jump Game</span>
+            <a class="problem-link" href="https://leetcode.com/problems/jump-game/" target="_blank" rel="noopener">LC 55</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-120">
+            <span class="check"></span>
+            <span class="item-text">Jump Game II</span>
+            <a class="problem-link" href="https://leetcode.com/problems/jump-game-ii/" target="_blank" rel="noopener">LC 45</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-121">
+            <span class="check"></span>
+            <span class="item-text">Gas Station</span>
+            <a class="problem-link" href="https://leetcode.com/problems/gas-station/" target="_blank" rel="noopener">LC 134</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-122">
+            <span class="check"></span>
+            <span class="item-text">Partition Labels</span>
+            <a class="problem-link" href="https://leetcode.com/problems/partition-labels/" target="_blank" rel="noopener">LC 763</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-123">
+            <span class="check"></span>
+            <span class="item-text">Hand of Straights</span>
+            <a class="problem-link" href="https://leetcode.com/problems/hand-of-straights/" target="_blank" rel="noopener">LC 846</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-124">
+            <span class="check"></span>
+            <span class="item-text">Queue Reconstruction by Height</span>
+            <a class="problem-link" href="https://leetcode.com/problems/queue-reconstruction-by-height/" target="_blank" rel="noopener">LC 406</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-125">
+            <span class="check"></span>
+            <span class="item-text">Bag of Tokens</span>
+            <a class="problem-link" href="https://leetcode.com/problems/bag-of-tokens/" target="_blank" rel="noopener">LC 948</a>
+        </label>
+        <div class="difficulty-section hard"><span class="dot"></span>Hard</div>
+        <label class="item">
+            <input type="checkbox" id="p-126">
+            <span class="check"></span>
+            <span class="item-text">Candy</span>
+            <a class="problem-link" href="https://leetcode.com/problems/candy/" target="_blank" rel="noopener">LC 135</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-127">
+            <span class="check"></span>
+            <span class="item-text">Min Cost to Hire K Workers</span>
+            <a class="problem-link" href="https://leetcode.com/problems/min-cost-to-hire-k-workers/" target="_blank" rel="noopener">LC 857</a>
+        </label>
+    </div>
+</div>
+<div class="card h">
+    <div class="card-header">
+        <h3 class="card-title">Backtracking</h3>
+        <div class="card-meta">
+            <span class="progress-text">0/8</span>
+        </div>
+    </div>
+    <div class="card-progress"><div class="fill"></div></div>
+    <div class="card-body">
+        <div class="difficulty-section med"><span class="dot"></span>Medium</div>
+        <label class="item">
+            <input type="checkbox" id="p-128">
+            <span class="check"></span>
+            <span class="item-text">Subsets</span>
+            <a class="problem-link" href="https://leetcode.com/problems/subsets/" target="_blank" rel="noopener">LC 78</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-129">
+            <span class="check"></span>
+            <span class="item-text">Combination Sum</span>
+            <a class="problem-link" href="https://leetcode.com/problems/combination-sum/" target="_blank" rel="noopener">LC 39</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-130">
+            <span class="check"></span>
+            <span class="item-text">Permutations</span>
+            <a class="problem-link" href="https://leetcode.com/problems/permutations/" target="_blank" rel="noopener">LC 46</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-131">
+            <span class="check"></span>
+            <span class="item-text">Letter Combinations of Phone Number</span>
+            <a class="problem-link" href="https://leetcode.com/problems/letter-combinations-of-phone-number/" target="_blank" rel="noopener">LC 17</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-132">
+            <span class="check"></span>
+            <span class="item-text">Word Search</span>
+            <a class="problem-link" href="https://leetcode.com/problems/word-search/" target="_blank" rel="noopener">LC 79</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-133">
+            <span class="check"></span>
+            <span class="item-text">Palindrome Partitioning</span>
+            <a class="problem-link" href="https://leetcode.com/problems/palindrome-partitioning/" target="_blank" rel="noopener">LC 131</a>
+        </label>
+        <div class="difficulty-section hard"><span class="dot"></span>Hard</div>
+        <label class="item">
+            <input type="checkbox" id="p-134">
+            <span class="check"></span>
+            <span class="item-text">N-Queens</span>
+            <a class="problem-link" href="https://leetcode.com/problems/n-queens/" target="_blank" rel="noopener">LC 51</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-135">
+            <span class="check"></span>
+            <span class="item-text">Word Search II</span>
+            <a class="problem-link" href="https://leetcode.com/problems/word-search-ii/" target="_blank" rel="noopener">LC 212</a>
+        </label>
+    </div>
+</div>
+<div class="card h">
+    <div class="card-header">
+        <h3 class="card-title">Graphs — BFS / DFS</h3>
+        <div class="card-meta">
+            <span class="progress-text">0/17</span>
+        </div>
+    </div>
+    <div class="card-progress"><div class="fill"></div></div>
+    <div class="card-body">
+        <div class="difficulty-section easy"><span class="dot"></span>Easy</div>
+        <label class="item">
+            <input type="checkbox" id="p-136">
+            <span class="check"></span>
+            <span class="item-text">Find if Path Exists</span>
+            <a class="problem-link" href="https://leetcode.com/problems/find-if-path-exists/" target="_blank" rel="noopener">LC 1971</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-137">
+            <span class="check"></span>
+            <span class="item-text">Flood Fill</span>
+            <a class="problem-link" href="https://leetcode.com/problems/flood-fill/" target="_blank" rel="noopener">LC 733</a>
+        </label>
+        <div class="difficulty-section med"><span class="dot"></span>Medium</div>
+        <label class="item">
+            <input type="checkbox" id="p-138">
+            <span class="check"></span>
+            <span class="item-text">Number of Islands</span>
+            <a class="problem-link" href="https://leetcode.com/problems/number-of-islands/" target="_blank" rel="noopener">LC 200</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-139">
+            <span class="check"></span>
+            <span class="item-text">Clone Graph</span>
+            <a class="problem-link" href="https://leetcode.com/problems/clone-graph/" target="_blank" rel="noopener">LC 133</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-140">
+            <span class="check"></span>
+            <span class="item-text">Max Area of Island</span>
+            <a class="problem-link" href="https://leetcode.com/problems/max-area-of-island/" target="_blank" rel="noopener">LC 695</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-141">
+            <span class="check"></span>
+            <span class="item-text">Rotting Oranges</span>
+            <a class="problem-link" href="https://leetcode.com/problems/rotting-oranges/" target="_blank" rel="noopener">LC 994</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-142">
+            <span class="check"></span>
+            <span class="item-text">Pacific Atlantic Water Flow</span>
+            <a class="problem-link" href="https://leetcode.com/problems/pacific-atlantic-water-flow/" target="_blank" rel="noopener">LC 417</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-143">
+            <span class="check"></span>
+            <span class="item-text">Surrounded Regions</span>
+            <a class="problem-link" href="https://leetcode.com/problems/surrounded-regions/" target="_blank" rel="noopener">LC 130</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-144">
+            <span class="check"></span>
+            <span class="item-text">Graph Valid Tree</span>
+            <a class="problem-link" href="https://leetcode.com/problems/graph-valid-tree/" target="_blank" rel="noopener">LC 261</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-145">
+            <span class="check"></span>
+            <span class="item-text">Number of Connected Components</span>
+            <a class="problem-link" href="https://leetcode.com/problems/number-of-connected-components/" target="_blank" rel="noopener">LC 323</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-146">
+            <span class="check"></span>
+            <span class="item-text">Evaluate Division</span>
+            <a class="problem-link" href="https://leetcode.com/problems/evaluate-division/" target="_blank" rel="noopener">LC 399</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-147">
+            <span class="check"></span>
+            <span class="item-text">Is Graph Bipartite?</span>
+            <a class="problem-link" href="https://leetcode.com/problems/is-graph-bipartite/" target="_blank" rel="noopener">LC 785</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-148">
+            <span class="check"></span>
+            <span class="item-text">Keys and Rooms</span>
+            <a class="problem-link" href="https://leetcode.com/problems/keys-and-rooms/" target="_blank" rel="noopener">LC 841</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-149">
+            <span class="check"></span>
+            <span class="item-text">Number of Provinces</span>
+            <a class="problem-link" href="https://leetcode.com/problems/number-of-provinces/" target="_blank" rel="noopener">LC 547</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-150">
+            <span class="check"></span>
+            <span class="item-text">Snakes and Ladders</span>
+            <a class="problem-link" href="https://leetcode.com/problems/snakes-and-ladders/" target="_blank" rel="noopener">LC 909</a>
+        </label>
+        <div class="difficulty-section hard"><span class="dot"></span>Hard</div>
+        <label class="item">
+            <input type="checkbox" id="p-151">
+            <span class="check"></span>
+            <span class="item-text">Word Ladder</span>
+            <a class="problem-link" href="https://leetcode.com/problems/word-ladder/" target="_blank" rel="noopener">LC 127</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-152">
+            <span class="check"></span>
+            <span class="item-text">Critical Connections</span>
+            <a class="problem-link" href="https://leetcode.com/problems/critical-connections/" target="_blank" rel="noopener">LC 1192</a>
+        </label>
+    </div>
+</div>
+<div class="card h">
+    <div class="card-header">
+        <h3 class="card-title">Topological Sort</h3>
+        <div class="card-meta">
+            <span class="progress-text">0/3</span>
+        </div>
+    </div>
+    <div class="card-progress"><div class="fill"></div></div>
+    <div class="card-body">
+        <div class="difficulty-section med"><span class="dot"></span>Medium</div>
+        <label class="item">
+            <input type="checkbox" id="p-153">
+            <span class="check"></span>
+            <span class="item-text">Course Schedule</span>
+            <a class="problem-link" href="https://leetcode.com/problems/course-schedule/" target="_blank" rel="noopener">LC 207</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-154">
+            <span class="check"></span>
+            <span class="item-text">Course Schedule II</span>
+            <a class="problem-link" href="https://leetcode.com/problems/course-schedule-ii/" target="_blank" rel="noopener">LC 210</a>
+        </label>
+        <div class="difficulty-section hard"><span class="dot"></span>Hard</div>
+        <label class="item">
+            <input type="checkbox" id="p-155">
+            <span class="check"></span>
+            <span class="item-text">Alien Dictionary</span>
+            <a class="problem-link" href="https://leetcode.com/problems/alien-dictionary/" target="_blank" rel="noopener">LC 269</a>
+        </label>
+    </div>
+</div>
+<div class="card h">
+    <div class="card-header">
+        <h3 class="card-title">Union Find</h3>
+        <div class="card-meta">
+            <span class="progress-text">0/4</span>
+        </div>
+    </div>
+    <div class="card-progress"><div class="fill"></div></div>
+    <div class="card-body">
+        <div class="difficulty-section med"><span class="dot"></span>Medium</div>
+        <label class="item">
+            <input type="checkbox" id="p-156">
+            <span class="check"></span>
+            <span class="item-text">Number of Connected Components</span>
+            <a class="problem-link" href="https://leetcode.com/problems/number-of-connected-components/" target="_blank" rel="noopener">LC 323</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-157">
+            <span class="check"></span>
+            <span class="item-text">Redundant Connection</span>
+            <a class="problem-link" href="https://leetcode.com/problems/redundant-connection/" target="_blank" rel="noopener">LC 684</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-158">
+            <span class="check"></span>
+            <span class="item-text">Accounts Merge</span>
+            <a class="problem-link" href="https://leetcode.com/problems/accounts-merge/" target="_blank" rel="noopener">LC 721</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-159">
+            <span class="check"></span>
+            <span class="item-text">Min Cost to Connect All Points</span>
+            <a class="problem-link" href="https://leetcode.com/problems/min-cost-to-connect-all-points/" target="_blank" rel="noopener">LC 1584</a>
+        </label>
+    </div>
+</div>
+<div class="card h">
+    <div class="card-header">
+        <h3 class="card-title">Shortest Path</h3>
+        <div class="card-meta">
+            <span class="progress-text">0/4</span>
+        </div>
+    </div>
+    <div class="card-progress"><div class="fill"></div></div>
+    <div class="card-body">
+        <div class="difficulty-section med"><span class="dot"></span>Medium</div>
+        <label class="item">
+            <input type="checkbox" id="p-160">
+            <span class="check"></span>
+            <span class="item-text">Network Delay Time</span>
+            <a class="problem-link" href="https://leetcode.com/problems/network-delay-time/" target="_blank" rel="noopener">LC 743</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-161">
+            <span class="check"></span>
+            <span class="item-text">Cheapest Flights Within K Stops</span>
+            <a class="problem-link" href="https://leetcode.com/problems/cheapest-flights-within-k-stops/" target="_blank" rel="noopener">LC 787</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-162">
+            <span class="check"></span>
+            <span class="item-text">Path With Minimum Effort</span>
+            <a class="problem-link" href="https://leetcode.com/problems/path-with-minimum-effort/" target="_blank" rel="noopener">LC 1631</a>
+        </label>
+        <div class="difficulty-section hard"><span class="dot"></span>Hard</div>
+        <label class="item">
+            <input type="checkbox" id="p-163">
+            <span class="check"></span>
+            <span class="item-text">Swim in Rising Water</span>
+            <a class="problem-link" href="https://leetcode.com/problems/swim-in-rising-water/" target="_blank" rel="noopener">LC 778</a>
+        </label>
+    </div>
+</div>
+<div class="card h">
+    <div class="card-header">
+        <h3 class="card-title">Minimum Spanning Tree</h3>
+        <div class="card-meta">
+            <span class="progress-text">0/1</span>
+        </div>
+    </div>
+    <div class="card-progress"><div class="fill"></div></div>
+    <div class="card-body">
+        <div class="difficulty-section med"><span class="dot"></span>Medium</div>
+        <label class="item">
+            <input type="checkbox" id="p-164">
+            <span class="check"></span>
+            <span class="item-text">Min Cost to Connect All Points</span>
+            <a class="problem-link" href="https://leetcode.com/problems/min-cost-to-connect-all-points/" target="_blank" rel="noopener">LC 1584</a>
+        </label>
+    </div>
+</div>
+<div class="card h">
+    <div class="card-header">
+        <h3 class="card-title">1D Dynamic Programming</h3>
+        <div class="card-meta">
+            <span class="progress-text">0/15</span>
+        </div>
+    </div>
+    <div class="card-progress"><div class="fill"></div></div>
+    <div class="card-body">
+        <div class="difficulty-section easy"><span class="dot"></span>Easy</div>
+        <label class="item">
+            <input type="checkbox" id="p-165">
+            <span class="check"></span>
+            <span class="item-text">Climbing Stairs</span>
+            <a class="problem-link" href="https://leetcode.com/problems/climbing-stairs/" target="_blank" rel="noopener">LC 70</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-166">
+            <span class="check"></span>
+            <span class="item-text">Min Cost Climbing Stairs</span>
+            <a class="problem-link" href="https://leetcode.com/problems/min-cost-climbing-stairs/" target="_blank" rel="noopener">LC 746</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-167">
+            <span class="check"></span>
+            <span class="item-text">House Robber</span>
+            <a class="problem-link" href="https://leetcode.com/problems/house-robber/" target="_blank" rel="noopener">LC 198</a>
+        </label>
+        <div class="difficulty-section med"><span class="dot"></span>Medium</div>
+        <label class="item">
+            <input type="checkbox" id="p-168">
+            <span class="check"></span>
+            <span class="item-text">House Robber II</span>
+            <a class="problem-link" href="https://leetcode.com/problems/house-robber-ii/" target="_blank" rel="noopener">LC 213</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-169">
+            <span class="check"></span>
+            <span class="item-text">Coin Change</span>
+            <a class="problem-link" href="https://leetcode.com/problems/coin-change/" target="_blank" rel="noopener">LC 322</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-170">
+            <span class="check"></span>
+            <span class="item-text">Decode Ways</span>
+            <a class="problem-link" href="https://leetcode.com/problems/decode-ways/" target="_blank" rel="noopener">LC 91</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-171">
+            <span class="check"></span>
+            <span class="item-text">Word Break</span>
+            <a class="problem-link" href="https://leetcode.com/problems/word-break/" target="_blank" rel="noopener">LC 139</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-172">
+            <span class="check"></span>
+            <span class="item-text">Longest Increasing Subsequence</span>
+            <a class="problem-link" href="https://leetcode.com/problems/longest-increasing-subsequence/" target="_blank" rel="noopener">LC 300</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-173">
+            <span class="check"></span>
+            <span class="item-text">Maximum Product Subarray</span>
+            <a class="problem-link" href="https://leetcode.com/problems/maximum-product-subarray/" target="_blank" rel="noopener">LC 152</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-174">
+            <span class="check"></span>
+            <span class="item-text">Buy/Sell Stock with Cooldown</span>
+            <a class="problem-link" href="https://leetcode.com/problems/buy-sell-stock-with-cooldown/" target="_blank" rel="noopener">LC 309</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-175">
+            <span class="check"></span>
+            <span class="item-text">Target Sum</span>
+            <a class="problem-link" href="https://leetcode.com/problems/target-sum/" target="_blank" rel="noopener">LC 494</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-176">
+            <span class="check"></span>
+            <span class="item-text">Buy/Sell Stock with Fee</span>
+            <a class="problem-link" href="https://leetcode.com/problems/buy-sell-stock-with-fee/" target="_blank" rel="noopener">LC 714</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-177">
+            <span class="check"></span>
+            <span class="item-text">Combination Sum IV</span>
+            <a class="problem-link" href="https://leetcode.com/problems/combination-sum-iv/" target="_blank" rel="noopener">LC 377</a>
+        </label>
+        <div class="difficulty-section hard"><span class="dot"></span>Hard</div>
+        <label class="item">
+            <input type="checkbox" id="p-178">
+            <span class="check"></span>
+            <span class="item-text">Max Profit in Job Scheduling</span>
+            <a class="problem-link" href="https://leetcode.com/problems/max-profit-in-job-scheduling/" target="_blank" rel="noopener">LC 1235</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-179">
+            <span class="check"></span>
+            <span class="item-text">Burst Balloons</span>
+            <a class="problem-link" href="https://leetcode.com/problems/burst-balloons/" target="_blank" rel="noopener">LC 312</a>
+        </label>
+    </div>
+</div>
+<div class="card h">
+    <div class="card-header">
+        <h3 class="card-title">2D Dynamic Programming</h3>
+        <div class="card-meta">
+            <span class="progress-text">0/8</span>
+        </div>
+    </div>
+    <div class="card-progress"><div class="fill"></div></div>
+    <div class="card-body">
+        <div class="difficulty-section easy"><span class="dot"></span>Easy</div>
+        <label class="item">
+            <input type="checkbox" id="p-180">
+            <span class="check"></span>
+            <span class="item-text">Unique Paths</span>
+            <a class="problem-link" href="https://leetcode.com/problems/unique-paths/" target="_blank" rel="noopener">LC 62</a>
+        </label>
+        <div class="difficulty-section med"><span class="dot"></span>Medium</div>
+        <label class="item">
+            <input type="checkbox" id="p-181">
+            <span class="check"></span>
+            <span class="item-text">Longest Common Subsequence</span>
+            <a class="problem-link" href="https://leetcode.com/problems/longest-common-subsequence/" target="_blank" rel="noopener">LC 1143</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-182">
+            <span class="check"></span>
+            <span class="item-text">Coin Change II</span>
+            <a class="problem-link" href="https://leetcode.com/problems/coin-change-ii/" target="_blank" rel="noopener">LC 518</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-183">
+            <span class="check"></span>
+            <span class="item-text">Partition Equal Subset Sum</span>
+            <a class="problem-link" href="https://leetcode.com/problems/partition-equal-subset-sum/" target="_blank" rel="noopener">LC 416</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-184">
+            <span class="check"></span>
+            <span class="item-text">Longest Palindromic Substring</span>
+            <a class="problem-link" href="https://leetcode.com/problems/longest-palindromic-substring/" target="_blank" rel="noopener">LC 5</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-185">
+            <span class="check"></span>
+            <span class="item-text">Palindromic Substrings</span>
+            <a class="problem-link" href="https://leetcode.com/problems/palindromic-substrings/" target="_blank" rel="noopener">LC 647</a>
+        </label>
+        <div class="difficulty-section hard"><span class="dot"></span>Hard</div>
+        <label class="item">
+            <input type="checkbox" id="p-186">
+            <span class="check"></span>
+            <span class="item-text">Edit Distance</span>
+            <a class="problem-link" href="https://leetcode.com/problems/edit-distance/" target="_blank" rel="noopener">LC 72</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-187">
+            <span class="check"></span>
+            <span class="item-text">Distinct Subsequences</span>
+            <a class="problem-link" href="https://leetcode.com/problems/distinct-subsequences/" target="_blank" rel="noopener">LC 115</a>
+        </label>
+    </div>
+</div>
+<div class="card h">
+    <div class="card-header">
+        <h3 class="card-title">Trie</h3>
+        <div class="card-meta">
+            <span class="progress-text">0/4</span>
+        </div>
+    </div>
+    <div class="card-progress"><div class="fill"></div></div>
+    <div class="card-body">
+        <div class="difficulty-section med"><span class="dot"></span>Medium</div>
+        <label class="item">
+            <input type="checkbox" id="p-188">
+            <span class="check"></span>
+            <span class="item-text">Implement Trie</span>
+            <a class="problem-link" href="https://leetcode.com/problems/implement-trie/" target="_blank" rel="noopener">LC 208</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-189">
+            <span class="check"></span>
+            <span class="item-text">Design Add and Search Words</span>
+            <a class="problem-link" href="https://leetcode.com/problems/design-add-and-search-words/" target="_blank" rel="noopener">LC 211</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-190">
+            <span class="check"></span>
+            <span class="item-text">Map Sum Pairs</span>
+            <a class="problem-link" href="https://leetcode.com/problems/map-sum-pairs/" target="_blank" rel="noopener">LC 677</a>
+        </label>
+        <div class="difficulty-section hard"><span class="dot"></span>Hard</div>
+        <label class="item">
+            <input type="checkbox" id="p-191">
+            <span class="check"></span>
+            <span class="item-text">Word Search II</span>
+            <a class="problem-link" href="https://leetcode.com/problems/word-search-ii/" target="_blank" rel="noopener">LC 212</a>
+        </label>
+    </div>
+</div>
+<div class="card mh">
+    <div class="card-header">
+        <h3 class="card-title">Bit Manipulation</h3>
+        <div class="card-meta">
+            <span class="progress-text">0/8</span>
+        </div>
+    </div>
+    <div class="card-progress"><div class="fill"></div></div>
+    <div class="card-body">
+        <div class="difficulty-section easy"><span class="dot"></span>Easy</div>
+        <label class="item">
+            <input type="checkbox" id="p-192">
+            <span class="check"></span>
+            <span class="item-text">Single Number</span>
+            <a class="problem-link" href="https://leetcode.com/problems/single-number/" target="_blank" rel="noopener">LC 136</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-193">
+            <span class="check"></span>
+            <span class="item-text">Number of 1 Bits</span>
+            <a class="problem-link" href="https://leetcode.com/problems/number-of-1-bits/" target="_blank" rel="noopener">LC 191</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-194">
+            <span class="check"></span>
+            <span class="item-text">Counting Bits</span>
+            <a class="problem-link" href="https://leetcode.com/problems/counting-bits/" target="_blank" rel="noopener">LC 338</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-195">
+            <span class="check"></span>
+            <span class="item-text">Reverse Bits</span>
+            <a class="problem-link" href="https://leetcode.com/problems/reverse-bits/" target="_blank" rel="noopener">LC 190</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-196">
+            <span class="check"></span>
+            <span class="item-text">Missing Number</span>
+            <a class="problem-link" href="https://leetcode.com/problems/missing-number/" target="_blank" rel="noopener">LC 268</a>
+        </label>
+        <div class="difficulty-section med"><span class="dot"></span>Medium</div>
+        <label class="item">
+            <input type="checkbox" id="p-197">
+            <span class="check"></span>
+            <span class="item-text">Sum of Two Integers</span>
+            <a class="problem-link" href="https://leetcode.com/problems/sum-of-two-integers/" target="_blank" rel="noopener">LC 371</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-198">
+            <span class="check"></span>
+            <span class="item-text">Bitwise AND of Numbers Range</span>
+            <a class="problem-link" href="https://leetcode.com/problems/bitwise-and-of-numbers-range/" target="_blank" rel="noopener">LC 201</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-199">
+            <span class="check"></span>
+            <span class="item-text">Single Number III</span>
+            <a class="problem-link" href="https://leetcode.com/problems/single-number-iii/" target="_blank" rel="noopener">LC 260</a>
+        </label>
+    </div>
+</div>
+<div class="card mh">
+    <div class="card-header">
+        <h3 class="card-title">Math / Matrix</h3>
+        <div class="card-meta">
+            <span class="progress-text">0/7</span>
+        </div>
+    </div>
+    <div class="card-progress"><div class="fill"></div></div>
+    <div class="card-body">
+        <div class="difficulty-section easy"><span class="dot"></span>Easy</div>
+        <label class="item">
+            <input type="checkbox" id="p-200">
+            <span class="check"></span>
+            <span class="item-text">Happy Number</span>
+            <a class="problem-link" href="https://leetcode.com/problems/happy-number/" target="_blank" rel="noopener">LC 202</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-201">
+            <span class="check"></span>
+            <span class="item-text">Palindrome Number</span>
+            <a class="problem-link" href="https://leetcode.com/problems/palindrome-number/" target="_blank" rel="noopener">LC 9</a>
+        </label>
+        <div class="difficulty-section med"><span class="dot"></span>Medium</div>
+        <label class="item">
+            <input type="checkbox" id="p-202">
+            <span class="check"></span>
+            <span class="item-text">Pow(x, n)</span>
+            <a class="problem-link" href="https://leetcode.com/problems/pow-x-n/" target="_blank" rel="noopener">LC 50</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-203">
+            <span class="check"></span>
+            <span class="item-text">Rotate Image</span>
+            <a class="problem-link" href="https://leetcode.com/problems/rotate-image/" target="_blank" rel="noopener">LC 48</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-204">
+            <span class="check"></span>
+            <span class="item-text">Spiral Matrix</span>
+            <a class="problem-link" href="https://leetcode.com/problems/spiral-matrix/" target="_blank" rel="noopener">LC 54</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-205">
+            <span class="check"></span>
+            <span class="item-text">Set Matrix Zeroes</span>
+            <a class="problem-link" href="https://leetcode.com/problems/set-matrix-zeroes/" target="_blank" rel="noopener">LC 73</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-206">
+            <span class="check"></span>
+            <span class="item-text">Multiply Strings</span>
+            <a class="problem-link" href="https://leetcode.com/problems/multiply-strings/" target="_blank" rel="noopener">LC 43</a>
+        </label>
+    </div>
+</div>
+<div class="card h">
+    <div class="card-header">
+        <h3 class="card-title">Strings / Design</h3>
+        <div class="card-meta">
+            <span class="progress-text">0/2</span>
+        </div>
+    </div>
+    <div class="card-progress"><div class="fill"></div></div>
+    <div class="card-body">
+        <div class="difficulty-section med"><span class="dot"></span>Medium</div>
+        <label class="item">
+            <input type="checkbox" id="p-207">
+            <span class="check"></span>
+            <span class="item-text">Reverse Words in a String</span>
+            <a class="problem-link" href="https://leetcode.com/problems/reverse-words-in-a-string/" target="_blank" rel="noopener">LC 151</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-208">
+            <span class="check"></span>
+            <span class="item-text">Design Underground System</span>
+            <a class="problem-link" href="https://leetcode.com/problems/design-underground-system/" target="_blank" rel="noopener">LC 1396</a>
+        </label>
+    </div>
+</div>
+<div class="card m">
+    <div class="card-header">
+        <h3 class="card-title">Codeforces — Easy</h3>
+        <div class="card-meta">
+            <span class="progress-text">0/16</span>
+        </div>
+    </div>
+    <div class="card-progress"><div class="fill"></div></div>
+    <div class="card-body">
+        <label class="item">
+            <input type="checkbox" id="p-209">
+            <span class="check"></span>
+            <span class="item-text">Watermelon</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/4/A" target="_blank" rel="noopener">CF 4A</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-210">
+            <span class="check"></span>
+            <span class="item-text">Way Too Long Words</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/71/A" target="_blank" rel="noopener">CF 71A</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-211">
+            <span class="check"></span>
+            <span class="item-text">Next Round</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/158/A" target="_blank" rel="noopener">CF 158A</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-212">
+            <span class="check"></span>
+            <span class="item-text">Team</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/231/A" target="_blank" rel="noopener">CF 231A</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-213">
+            <span class="check"></span>
+            <span class="item-text">Bit++</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/282/A" target="_blank" rel="noopener">CF 282A</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-214">
+            <span class="check"></span>
+            <span class="item-text">Beautiful Matrix</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/263/A" target="_blank" rel="noopener">CF 263A</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-215">
+            <span class="check"></span>
+            <span class="item-text">Helpful Maths</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/339/A" target="_blank" rel="noopener">CF 339A</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-216">
+            <span class="check"></span>
+            <span class="item-text">Soldier and Bananas</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/546/A" target="_blank" rel="noopener">CF 546A</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-217">
+            <span class="check"></span>
+            <span class="item-text">Nearly Lucky Number</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/110/A" target="_blank" rel="noopener">CF 110A</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-218">
+            <span class="check"></span>
+            <span class="item-text">Football</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/96/A" target="_blank" rel="noopener">CF 96A</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-219">
+            <span class="check"></span>
+            <span class="item-text">Bear and Big Brother</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/791/A" target="_blank" rel="noopener">CF 791A</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-220">
+            <span class="check"></span>
+            <span class="item-text">Stones on the Table</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/266/A" target="_blank" rel="noopener">CF 266A</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-221">
+            <span class="check"></span>
+            <span class="item-text">Petya and Strings</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/112/A" target="_blank" rel="noopener">CF 112A</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-222">
+            <span class="check"></span>
+            <span class="item-text">Word</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/59/A" target="_blank" rel="noopener">CF 59A</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-223">
+            <span class="check"></span>
+            <span class="item-text">Word Capitalization</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/281/A" target="_blank" rel="noopener">CF 281A</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-224">
+            <span class="check"></span>
+            <span class="item-text">Lucky Division</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/122/A" target="_blank" rel="noopener">CF 122A</a>
+        </label>
+    </div>
+</div>
+<div class="card h">
+    <div class="card-header">
+        <h3 class="card-title">Codeforces — Medium / Stretch</h3>
+        <div class="card-meta">
+            <span class="progress-text">0/26</span>
+        </div>
+    </div>
+    <div class="card-progress"><div class="fill"></div></div>
+    <div class="card-body">
+        <label class="item">
+            <input type="checkbox" id="p-225">
+            <span class="check"></span>
+            <span class="item-text">Fair Division</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/1472/B" target="_blank" rel="noopener">CF 1472B</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-226">
+            <span class="check"></span>
+            <span class="item-text">Boats Competition</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/1399/C" target="_blank" rel="noopener">CF 1399C</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-227">
+            <span class="check"></span>
+            <span class="item-text">Numbers on Whiteboard</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/1430/C" target="_blank" rel="noopener">CF 1430C</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-228">
+            <span class="check"></span>
+            <span class="item-text">Same Parity Summands</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/1352/B" target="_blank" rel="noopener">CF 1352B</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-229">
+            <span class="check"></span>
+            <span class="item-text">K-th Not Divisible by n</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/1352/C" target="_blank" rel="noopener">CF 1352C</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-230">
+            <span class="check"></span>
+            <span class="item-text">Social Distance</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/1367/C" target="_blank" rel="noopener">CF 1367C</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-231">
+            <span class="check"></span>
+            <span class="item-text">Vanya and Lanterns</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/492/B" target="_blank" rel="noopener">CF 492B</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-232">
+            <span class="check"></span>
+            <span class="item-text">Cheap Travel</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/466/A" target="_blank" rel="noopener">CF 466A</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-233">
+            <span class="check"></span>
+            <span class="item-text">Chewbacca and Number</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/514/A" target="_blank" rel="noopener">CF 514A</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-234">
+            <span class="check"></span>
+            <span class="item-text">Worms</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/474/B" target="_blank" rel="noopener">CF 474B</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-235">
+            <span class="check"></span>
+            <span class="item-text">Same Differences</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/1520/D" target="_blank" rel="noopener">CF 1520D</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-236">
+            <span class="check"></span>
+            <span class="item-text">Binary Deque</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/1692/E" target="_blank" rel="noopener">CF 1692E</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-237">
+            <span class="check"></span>
+            <span class="item-text">BerSU Ball</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/489/B" target="_blank" rel="noopener">CF 489B</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-238">
+            <span class="check"></span>
+            <span class="item-text">Kuriyama Mirai's Stones</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/433/B" target="_blank" rel="noopener">CF 433B</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-239">
+            <span class="check"></span>
+            <span class="item-text">Flipping Game</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/327/A" target="_blank" rel="noopener">CF 327A</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-240">
+            <span class="check"></span>
+            <span class="item-text">Alternating Subsequence</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/1343/C" target="_blank" rel="noopener">CF 1343C</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-241">
+            <span class="check"></span>
+            <span class="item-text">Stable Groups</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/1539/C" target="_blank" rel="noopener">CF 1539C</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-242">
+            <span class="check"></span>
+            <span class="item-text">Matryoshkas</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/1790/D" target="_blank" rel="noopener">CF 1790D</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-243">
+            <span class="check"></span>
+            <span class="item-text">Registration System</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/4/C" target="_blank" rel="noopener">CF 4C</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-244">
+            <span class="check"></span>
+            <span class="item-text">IQ Test</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/25/A" target="_blank" rel="noopener">CF 25A</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-245">
+            <span class="check"></span>
+            <span class="item-text">T-primes</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/230/B" target="_blank" rel="noopener">CF 230B</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-246">
+            <span class="check"></span>
+            <span class="item-text">Cut Ribbon</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/189/A" target="_blank" rel="noopener">CF 189A</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-247">
+            <span class="check"></span>
+            <span class="item-text">Petr and a Combination Lock</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/1097/B" target="_blank" rel="noopener">CF 1097B</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-248">
+            <span class="check"></span>
+            <span class="item-text">Vitamins</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/1042/B" target="_blank" rel="noopener">CF 1042B</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-249">
+            <span class="check"></span>
+            <span class="item-text">Planning The Expedition</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/1011/B" target="_blank" rel="noopener">CF 1011B</a>
+        </label>
+        <label class="item">
+            <input type="checkbox" id="p-250">
+            <span class="check"></span>
+            <span class="item-text">Nice Garland</span>
+            <a class="problem-link" href="https://codeforces.com/problemset/problem/1108/C" target="_blank" rel="noopener">CF 1108C</a>
+        </label>
+    </div>
+</div>
+
+</div>
+<script>
+(function() {
+    const STORAGE_KEY = 'dsa-checklist';
+
+    function saveState() {
+        const checks = {};
+        document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
+            if (cb.id) checks[cb.id] = cb.checked;
+        });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(checks));
+    }
+
+    function loadState() {
+        try {
+            var data = localStorage.getItem(STORAGE_KEY);
+            if (!data) return;
+            var checks = JSON.parse(data);
+            Object.keys(checks).forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) el.checked = checks[id];
+            });
+        } catch(e) {}
+    }
+
+    function updateProgress() {
+        var totalChecked = 0, totalItems = 0;
+        document.querySelectorAll('.card').forEach(function(card) {
+            var cbs = card.querySelectorAll('input[type="checkbox"]');
+            var checked = card.querySelectorAll('input[type="checkbox"]:checked').length;
+            var total = cbs.length;
+            if (total === 0) return;
+            totalChecked += checked;
+            totalItems += total;
+            var pt = card.querySelector('.progress-text');
+            var pf = card.querySelector('.card-progress .fill');
+            if (pt) pt.textContent = checked + '/' + total;
+            if (pf) pf.style.width = (total ? (checked / total * 100) : 0) + '%';
+        });
+        var of = document.getElementById('overall-fill');
+        var ot = document.getElementById('overall-text');
+        var pct = totalItems ? Math.round(totalChecked / totalItems * 100) : 0;
+        if (of) of.style.width = pct + '%';
+        if (ot) ot.textContent = totalChecked + ' / ' + totalItems + ' (' + pct + '%)';
+    }
+
+    window.resetAll = function() {
+        if (!confirm('Reset all progress on this page? This cannot be undone.')) return;
+        localStorage.removeItem(STORAGE_KEY);
+        document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
+            cb.checked = false;
+        });
+        updateProgress();
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadState();
+        updateProgress();
+        document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
+            cb.addEventListener('change', function() {
+                saveState();
+                updateProgress();
+            });
+        });
+    });
+})();
+</script>
+</body>
+</html>

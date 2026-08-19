@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GRE General Test — Master Scope</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+:root {
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --text: #0f172a;
+    --text-mid: #334155;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
+    --shadow-hover: 0 8px 25px rgba(0,0,0,0.08);
+
+    --p0-accent: #ef4444; --p0-bg: #fef2f2; --p0-text: #991b1b;
+    --p1-accent: #f59e0b; --p1-bg: #fffbeb; --p1-text: #92400e;
+    --p2-accent: #3b82f6; --p2-bg: #eff6ff; --p2-text: #1e40af;
+    
+    --check-done: #22c55e;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 20px;
+    line-height: 1.5;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+}
+.nav { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; font-size: 12px; }
+.nav a { color: var(--text-muted); text-decoration: none; padding: 6px 14px; border-radius: 6px; border: 1px solid var(--border); background: white; font-weight: 500; transition: all 0.15s ease; }
+.nav a.active { background: var(--text); color: white; border-color: var(--text); }
+.nav a:hover:not(.active) { background: var(--border-light); border-color: #cbd5e1; }
+.page-header { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%); color: white; padding: 28px 30px 24px; border-radius: 14px; margin-bottom: 22px; position: relative; overflow: hidden; }
+.page-header::before { content: ''; position: absolute; top: 0; right: 0; bottom: 0; width: 40%; background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.02) 100%); pointer-events: none; }
+.page-header h1 { font-weight: 300; letter-spacing: 2px; font-size: 20px; text-transform: uppercase; margin-bottom: 6px; color: #f1f5f9; }
+.page-header .subtitle { font-size: 12px; color: #94a3b8; max-width: 650px; line-height: 1.6; margin-bottom: 0; }
+.overall-progress { display: flex; align-items: center; justify-content: flex-start; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
+.overall-bar { width: 200px; height: 6px; background: rgba(255,255,255,0.15); border-radius: 4px; overflow: hidden; }
+.overall-bar .fill { height: 100%; background: linear-gradient(90deg, #22c55e, #4ade80); border-radius: 4px; transition: width 0.4s ease; width: 0%; }
+#overall-text { font-size: 13px; font-weight: 600; color: #cbd5e1; font-variant-numeric: tabular-nums; }
+.reset-btn { font-size: 10px; padding: 4px 12px; border: 1px solid rgba(239,68,68,0.4); color: #fca5a5; background: rgba(239,68,68,0.1); border-radius: 5px; cursor: pointer; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.15s; }
+.reset-btn:hover { background: rgba(239,68,68,0.2); border-color: rgba(239,68,68,0.6); }
+
+.masonry-grid { column-count: 3; column-gap: 16px; }
+.card { background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--border); border-radius: 10px; padding: 16px 16px 12px; margin-bottom: 16px; break-inside: avoid; box-shadow: var(--shadow); transition: box-shadow 0.2s ease, transform 0.2s ease; }
+.card:hover { box-shadow: var(--shadow-hover); transform: translateY(-1px); }
+.card.p0 { border-left-color: var(--p0-accent); }
+.card.p1 { border-left-color: var(--p1-accent); }
+.card.p2 { border-left-color: var(--p2-accent); }
+
+.card-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid var(--border-light); gap: 8px; }
+.card-title { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.3; margin:0; transition: color 0.2s; }
+.card-meta { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.badge { font-size: 9px; font-weight: 700; padding: 3px 8px; border-radius: 20px; text-transform: uppercase; white-space: nowrap; letter-spacing: 0.4px; }
+.badge.p0 { background: var(--p0-bg); color: var(--p0-text); }
+.badge.p1 { background: var(--p1-bg); color: var(--p1-text); }
+.badge.p2 { background: var(--p2-bg); color: var(--p2-text); }
+
+/* Custom Checkbox for Card Header */
+.item-header { display: flex; align-items: center; cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; }
+.item-header input[type="checkbox"] { position: absolute; opacity: 0; width: 0; height: 0; }
+.item-header .check { width: 18px; height: 18px; border: 2px solid #cbd5e1; border-radius: 50%; margin-right: 10px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; }
+.item-header:hover .check { border-color: #94a3b8; }
+.item-header input:checked + .check { background: var(--check-done); border-color: var(--check-done); animation: checkPop 0.2s ease; }
+@keyframes checkPop { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+.item-header input:checked + .check::after { content: '✓'; color: white; font-size: 11px; font-weight: 700; line-height: 1; }
+.item-header input:checked ~ .card-title { color: #94a3b8; text-decoration: line-through; }
+
+/* Non-markable card title */
+.card-title-plain { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.3; margin:0; }
+
+/* Informational Content inside Card */
+.info-section { margin-bottom: 14px; }
+.info-title { font-size: 11px; font-weight: 700; color: var(--text-mid); text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
+.info-list { list-style: none; padding-left: 0; margin: 0; }
+.info-list li { font-size: 12px; color: #1e293b; line-height: 1.5; padding-left: 12px; position: relative; margin-bottom: 4px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; }
+.info-list li::before { content: '→'; position: absolute; left: 0; color: #cbd5e1; font-weight: 600; }
+.desc-text { font-size: 12.5px; color: var(--text); margin-bottom: 12px; font-style: italic; font-weight: 500; }
+
+.section-divider { margin: 24px 0 16px; border-bottom: 2px solid var(--border); padding-bottom: 6px; width: 100%; grid-column: 1 / -1; }
+.section-divider h2 { font-size: 16px; font-weight: 700; color: var(--text); text-transform: uppercase; letter-spacing: 1px; }
+
+@media (max-width: 1100px) { .masonry-grid { column-count: 2; } }
+@media (max-width: 700px) {
+    body { padding: 10px; }
+    .masonry-grid { column-count: 1; }
+    .page-header { padding: 20px 18px; border-radius: 10px; }
+    .page-header h1 { font-size: 15px; letter-spacing: 1px; }
+    .page-header .subtitle { font-size: 11px; }
+}
+@media print {
+    @page { margin: 10mm; }
+    body { padding: 0; background: white !important; }
+    .nav, .reset-btn, .overall-progress, .card-progress, .tabs { display: none !important; }
+    .page-header { background: none !important; color: black !important; border: 2px solid #ccc; padding: 15px; margin-bottom: 20px; }
+    .page-header h1 { color: black !important; }
+    .page-header p, .page-header .subtitle, .page-header .roles { color: #333 !important; }
+    
+    /* Disable multi-column in print to prevent Chrome overlapping bug */
+    .masonry-grid { 
+        display: block !important;
+        column-count: auto !important; 
+    }
+    .card { 
+        break-inside: avoid !important; 
+        page-break-inside: avoid !important; 
+        box-shadow: none !important; 
+        border: 1px solid #aaa !important; 
+        padding: 12px !important; 
+        margin-bottom: 20px !important; 
+        -webkit-print-color-adjust: exact; 
+        print-color-adjust: exact;
+        display: block !important;
+        width: 100% !important;
+    }
+    
+    /* Ensure section headers don't cause blank pages and stick to their content */
+    .section-divider { 
+        page-break-before: auto !important; 
+        break-before: auto !important;
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+        margin-top: 30px !important; 
+    }
+}
+
+.info-list li.struck-through { text-decoration: line-through; opacity: 0.45; }
+</style>
+
+</head>
+<body>
+<nav class="nav">
+    <a href="schedule.html">Schedule</a>
+    <a href="gre-scope.html" class="active">GRE Scope</a>
+    <a href="ai-swe-scope.html">AI/SWE Scope</a>
+    <a href="core-ml-scope.html">Core ML</a>
+    <a href="hld-lld-tracker.html">HLD & LLD</a>
+    <a href="dsa-tracker.html">DSA Practice</a>
+</nav>
+<div class="page-header">
+    <h1>GRE General Test — Master Scope</h1>
+    <p class="subtitle">Complete GRE knowledge map with a usable completion tracker. Target score via GregMat, ETS Official, and 5 lb. practice.</p>
+    <div class="overall-progress">
+        <div class="overall-bar"><div class="fill" id="overall-fill"></div></div>
+        <span id="overall-text">0 / 0 (0%)</span>
+        <button class="reset-btn" onclick="resetAll()">Reset All</button>
+    </div>
+</div>
+<div class="masonry-grid">
+<div class="section-divider"><h2>P0 — QUANTITATIVE REASONING</h2></div>
+<div class="card p0">
+    <div class="card-header">
+
+        <label class="item-header">
+            <input type="checkbox" id="gre-q1">
+            <span class="check"></span>
+            <h3 class="card-title">1. ARITHMETIC</h3>
+        </label>
+        <div class="card-meta">
+            <span class="badge p0">P0</span>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="desc-text">Core numerical reasoning required throughout GRE Quant.</div>
+        <div class="info-section">
+            <div class="info-title">NUMBER PROPERTIES</div>
+            <ul class="info-list">
+                <li>Integers</li>
+                <li>Positive / negative numbers</li>
+                <li>Even / odd</li>
+                <li>Prime / composite</li>
+                <li>Factors</li>
+                <li>Multiples</li>
+                <li>Divisibility</li>
+                <li>GCD / LCM</li>
+                <li>Remainders</li>
+                <li>Units digit</li>
+                <li>Number properties</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">FRACTIONS, DECIMALS, RATIOS & PERCENTAGES</div>
+            <ul class="info-list">
+                <li>Fractions</li>
+                <li>Decimals</li>
+                <li>Ratios</li>
+                <li>Proportions</li>
+                <li>Percentages</li>
+                <li>Percent change</li>
+                <li>Rates</li>
+                <li>Units</li>
+                <li>Unit conversion</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">POWERS, ROOTS & ABSOLUTE VALUE</div>
+            <ul class="info-list">
+                <li>Exponents</li>
+                <li>Roots</li>
+                <li>Absolute value</li>
+                <li>Number line</li>
+                <li>Estimation</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">SEQUENCES & PATTERNS</div>
+            <ul class="info-list">
+                <li>Arithmetic sequences</li>
+                <li>Number patterns</li>
+                <li>Basic sequence relationships</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">ARITHMETIC WORD PROBLEMS</div>
+            <ul class="info-list">
+                <li>Translating words into mathematics</li>
+                <li>Rates</li>
+                <li>Ratios</li>
+                <li>Percent relationships</li>
+                <li>Unit conversions</li>
+                <li>Age relationships</li>
+                <li>Work/rate relationships</li>
+                <li>Mixture-style relationships where relevant</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">ARITHMETIC STRATEGIES</div>
+            <ul class="info-list">
+                <li>Plugging in</li>
+                <li>Choosing numbers</li>
+                <li>Backsolving</li>
+                <li>Estimation</li>
+                <li>Boundary testing</li>
+                <li>Number-property reasoning</li>
+                <li>Strategic calculation</li>
+            </ul>
+        </div>
+        <div class="info-section" style="margin-top:16px;">
+            <div class="info-title">SKILLS & STRATEGIES</div>
+            <ul class="info-list">
+                <li>Manipulate numbers efficiently</li>
+                <li>Recognize number properties</li>
+                <li>Estimate</li>
+                <li>Identify constraints</li>
+                <li>Test values</li>
+                <li>Translate verbal information</li>
+                <li>Work efficiently under time pressure</li>
+            </ul>
+        </div>
+        <div class="info-section" style="margin-top:16px; background:#f8fafc; padding:10px; border-radius:6px; border:1px solid #e2e8f0;">
+            <div class="info-title" style="color:#475569;">RESOURCES</div>
+            <div style="font-size:11px; margin-bottom:4px;"><strong style="color:#334155;">GREGMAT:</strong> Arithmetic curriculum · Quant strategies · Relevant Quant practice</div>
+            <div style="font-size:11px; margin-bottom:4px;"><strong style="color:#334155;">ETS:</strong> Official Quantitative Reasoning material · Relevant official Quant questions</div>
+            <div style="font-size:11px; margin-bottom:4px;"><strong style="color:#334155;">5 LB.:</strong> Arithmetic practice</div>
+        </div>
+    </div>
+</div>
+<div class="card p0">
+    <div class="card-header">
+
+        <label class="item-header">
+            <input type="checkbox" id="gre-q2">
+            <span class="check"></span>
+            <h3 class="card-title">2. ALGEBRA</h3>
+        </label>
+        <div class="card-meta">
+            <span class="badge p0">P0</span>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="info-section">
+            <div class="info-title">EXPRESSIONS & EQUATIONS</div>
+            <ul class="info-list">
+                <li>Algebraic expressions</li>
+                <li>Simplification</li>
+                <li>Factoring</li>
+                <li>Algebraic manipulation</li>
+                <li>Linear equations</li>
+                <li>Quadratic equations</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">INEQUALITIES & ABSOLUTE VALUE</div>
+            <ul class="info-list">
+                <li>Linear inequalities</li>
+                <li>Quadratic relationships</li>
+                <li>Absolute-value equations</li>
+                <li>Absolute-value inequalities</li>
+                <li>Sign analysis</li>
+                <li>Boundary behavior</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">SYSTEMS</div>
+            <ul class="info-list">
+                <li>Systems of equations</li>
+                <li>Systems of inequalities</li>
+                <li>Intersections</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">EXPONENTS & ROOTS</div>
+            <ul class="info-list">
+                <li>Exponent rules</li>
+                <li>Roots</li>
+                <li>Algebraic powers</li>
+                <li>Simplification</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">FUNCTIONS & SEQUENCES</div>
+            <ul class="info-list">
+                <li>Functions</li>
+                <li>Relations</li>
+                <li>Inputs / outputs</li>
+                <li>Sequences</li>
+                <li>Patterns</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">COORDINATE ALGEBRA</div>
+            <ul class="info-list">
+                <li>Coordinate plane</li>
+                <li>Slope</li>
+                <li>Intercepts</li>
+                <li>Lines</li>
+                <li>Graphs</li>
+                <li>Equations of lines</li>
+                <li>Graph interpretation</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">ALGEBRA WORD PROBLEMS</div>
+            <ul class="info-list">
+                <li>Translating words into equations</li>
+                <li>Rates</li>
+                <li>Relationships</li>
+                <li>Constraints</li>
+                <li>Multi-step algebraic modeling</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">ALGEBRA STRATEGIES</div>
+            <ul class="info-list">
+                <li>Plugging in</li>
+                <li>Backsolving</li>
+                <li>Choosing numbers</li>
+                <li>Algebraic simplification</li>
+                <li>Boundary testing</li>
+                <li>Sign analysis</li>
+            </ul>
+        </div>
+        <div class="info-section" style="margin-top:16px;">
+            <div class="info-title">SKILLS & STRATEGIES</div>
+            <ul class="info-list">
+                <li>Build equations</li>
+                <li>Manipulate expressions</li>
+                <li>Solve equations</li>
+                <li>Solve inequalities</li>
+                <li>Interpret graphs</li>
+                <li>Translate word problems</li>
+                <li>Recognize algebraic structure</li>
+            </ul>
+        </div>
+        <div class="info-section" style="margin-top:16px; background:#f8fafc; padding:10px; border-radius:6px; border:1px solid #e2e8f0;">
+            <div class="info-title" style="color:#475569;">RESOURCES</div>
+            <div style="font-size:11px; margin-bottom:4px;"><strong style="color:#334155;">GREGMAT:</strong> Algebra curriculum · Quant strategies</div>
+            <div style="font-size:11px; margin-bottom:4px;"><strong style="color:#334155;">ETS:</strong> Official Algebra material · Official Quant questions</div>
+            <div style="font-size:11px; margin-bottom:4px;"><strong style="color:#334155;">5 LB.:</strong> Algebra practice</div>
+        </div>
+    </div>
+</div>
+<div class="card p0">
+    <div class="card-header">
+
+        <label class="item-header">
+            <input type="checkbox" id="gre-q3">
+            <span class="check"></span>
+            <h3 class="card-title">3. GEOMETRY</h3>
+        </label>
+        <div class="card-meta">
+            <span class="badge p0">P0</span>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="info-section">
+            <div class="info-title">LINES & ANGLES</div>
+            <ul class="info-list">
+                <li>Lines</li>
+                <li>Angles</li>
+                <li>Parallel lines</li>
+                <li>Perpendicular lines</li>
+                <li>Transversals</li>
+                <li>Angle relationships</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">TRIANGLES</div>
+            <ul class="info-list">
+                <li>Triangle properties</li>
+                <li>Isosceles triangles</li>
+                <li>Equilateral triangles</li>
+                <li>Right triangles</li>
+                <li>30-60-90 triangles</li>
+                <li>Similar triangles</li>
+                <li>Congruent triangles</li>
+                <li>Pythagorean theorem</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">QUADRILATERALS & POLYGONS</div>
+            <ul class="info-list">
+                <li>Squares</li>
+                <li>Rectangles</li>
+                <li>Parallelograms</li>
+                <li>Trapezoids</li>
+                <li>Polygons</li>
+                <li>Polygon angle relationships</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">CIRCLES</div>
+            <ul class="info-list">
+                <li>Radius</li>
+                <li>Diameter</li>
+                <li>Circumference</li>
+                <li>Area</li>
+                <li>Arc relationships</li>
+                <li>Angle relationships</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">MEASUREMENT</div>
+            <ul class="info-list">
+                <li>Area</li>
+                <li>Perimeter</li>
+                <li>Volume</li>
+                <li>3D figures</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">COORDINATE GEOMETRY</div>
+            <ul class="info-list">
+                <li>Coordinate plane</li>
+                <li>Distance</li>
+                <li>Slope</li>
+                <li>Coordinate relationships</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">GEOMETRY STRATEGIES</div>
+            <ul class="info-list">
+                <li>Diagram interpretation</li>
+                <li>Symmetry</li>
+                <li>Drawing auxiliary lines</li>
+                <li>Special triangles</li>
+                <li>Formula recognition</li>
+                <li>Estimation</li>
+            </ul>
+        </div>
+        <div class="info-section" style="margin-top:16px;">
+            <div class="info-title">SKILLS & STRATEGIES</div>
+            <ul class="info-list">
+                <li>Formal geometry proofs are NOT required</li>
+                <li>Do not study advanced geometry unnecessarily</li>
+                <li>Do not introduce calculus or advanced mathematics</li>
+            </ul>
+        </div>
+        <div class="info-section" style="margin-top:16px; background:#f8fafc; padding:10px; border-radius:6px; border:1px solid #e2e8f0;">
+            <div class="info-title" style="color:#475569;">RESOURCES</div>
+            <div style="font-size:11px; margin-bottom:4px;"><strong style="color:#334155;">GREGMAT:</strong> Geometry curriculum · Quant strategies</div>
+            <div style="font-size:11px; margin-bottom:4px;"><strong style="color:#334155;">ETS:</strong> Official Geometry material · Official Quant questions</div>
+            <div style="font-size:11px; margin-bottom:4px;"><strong style="color:#334155;">5 LB.:</strong> Geometry practice</div>
+        </div>
+    </div>
+</div>
+<div class="card p0">
+    <div class="card-header">
+
+        <label class="item-header">
+            <input type="checkbox" id="gre-q4">
+            <span class="check"></span>
+            <h3 class="card-title">4. DATA ANALYSIS</h3>
+        </label>
+        <div class="card-meta">
+            <span class="badge p0">P0</span>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="info-section">
+            <div class="info-title">DESCRIPTIVE STATISTICS</div>
+            <ul class="info-list">
+                <li>Mean</li>
+                <li>Median</li>
+                <li>Mode</li>
+                <li>Range</li>
+                <li>Standard deviation</li>
+                <li>Quartiles</li>
+                <li>Percentiles</li>
+                <li>Interquartile range</li>
+                <li>Weighted averages where relevant</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">DATA REPRESENTATION</div>
+            <ul class="info-list">
+                <li>Tables</li>
+                <li>Bar graphs</li>
+                <li>Line graphs</li>
+                <li>Circle graphs</li>
+                <li>Boxplots</li>
+                <li>Scatterplots</li>
+                <li>Frequency distributions</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">PROBABILITY</div>
+            <ul class="info-list">
+                <li>Basic probability</li>
+                <li>Compound probability</li>
+                <li>Independent events</li>
+                <li>Conditional probability</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">COUNTING</div>
+            <ul class="info-list">
+                <li>Fundamental counting principle</li>
+                <li>Permutations</li>
+                <li>Combinations</li>
+                <li>Venn diagrams</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">DISTRIBUTIONS</div>
+            <ul class="info-list">
+                <li>Random variables</li>
+                <li>Probability distributions</li>
+                <li>Normal distributions</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">DATA INTERPRETATION STRATEGIES</div>
+            <ul class="info-list">
+                <li>Reading data efficiently</li>
+                <li>Identifying relevant information</li>
+                <li>Comparing quantities</li>
+                <li>Avoiding unnecessary calculations</li>
+                <li>Translating data</li>
+                <li>Probability modeling</li>
+                <li>Efficient counting</li>
+            </ul>
+        </div>
+        <div class="info-section" style="margin-top:16px;">
+            <div class="info-title">SKILLS & STRATEGIES</div>
+            <ul class="info-list">
+                <li>Do not study advanced inferential statistics</li>
+                <li>Keep statistics at GRE-relevant depth</li>
+            </ul>
+        </div>
+        <div class="info-section" style="margin-top:16px; background:#f8fafc; padding:10px; border-radius:6px; border:1px solid #e2e8f0;">
+            <div class="info-title" style="color:#475569;">RESOURCES</div>
+            <div style="font-size:11px; margin-bottom:4px;"><strong style="color:#334155;">GREGMAT:</strong> Data Analysis curriculum · Quant strategies</div>
+            <div style="font-size:11px; margin-bottom:4px;"><strong style="color:#334155;">ETS:</strong> Official Data Analysis material · Official Quant questions</div>
+            <div style="font-size:11px; margin-bottom:4px;"><strong style="color:#334155;">5 LB.:</strong> Data Analysis practice</div>
+        </div>
+    </div>
+</div>
+<div class="card p0">
+    <div class="card-header">
+
+        <h3 class="card-title-plain">QUANT QUESTION TYPES & STRATEGIES</h3>
+        <div class="card-meta">
+            <span class="badge p0">P0</span>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="desc-text">Cross-cutting Quant question formats and test-taking skills.</div>
+        <div class="info-section">
+            <div class="info-title">QUANTITATIVE COMPARISON</div>
+            <ul class="info-list">
+                <li>Quantity A</li>
+                <li>Quantity B</li>
+                <li>Four answer choices</li>
+                <li>Relationship determination</li>
+                <li>Testing values</li>
+                <li>Avoiding assumptions</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">MULTIPLE CHOICE</div>
+            <ul class="info-list">
+                <li>Single-answer questions</li>
+                <li>Multiple-answer questions</li>
+                <li>Elimination</li>
+                <li>Testing answer choices</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">NUMERIC ENTRY</div>
+            <ul class="info-list">
+                <li>Exact numerical answers</li>
+                <li>Fraction / decimal handling</li>
+                <li>Calculator use</li>
+                <li>Input accuracy</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">GENERAL QUANT STRATEGIES</div>
+            <ul class="info-list">
+                <li>Plugging in</li>
+                <li>Choosing numbers</li>
+                <li>Backsolving</li>
+                <li>Estimation</li>
+                <li>Case analysis</li>
+                <li>Boundary testing</li>
+                <li>Number properties</li>
+                <li>Diagram interpretation</li>
+                <li>Strategic guessing</li>
+                <li>Calculator strategy</li>
+                <li>Question selection</li>
+                <li>Skip / return</li>
+                <li>Time management</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="section-divider"><h2>P0 — VERBAL REASONING</h2></div>
+<div class="card p0">
+    <div class="card-header">
+
+        <label class="item-header">
+            <input type="checkbox" id="gre-v1">
+            <span class="check"></span>
+            <h3 class="card-title">5. VOCABULARY</h3>
+        </label>
+        <div class="card-meta">
+            <span class="badge p0">P0</span>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="info-section">
+            <div class="info-title">WORD MEANING</div>
+            <ul class="info-list">
+                <li>Definitions</li>
+                <li>Multiple meanings</li>
+                <li>Word families</li>
+                <li>Synonyms</li>
+                <li>Antonyms</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">WORD RELATIONSHIPS</div>
+            <ul class="info-list">
+                <li>Near-synonyms</li>
+                <li>Contrasts</li>
+                <li>Support relationships</li>
+                <li>Intensity</li>
+                <li>Positive / negative meaning</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">CONTEXTUAL VOCABULARY</div>
+            <ul class="info-list">
+                <li>Context clues</li>
+                <li>Tone</li>
+                <li>Connotation</li>
+                <li>Register</li>
+                <li>Sentence-level meaning</li>
+                <li>Passage-level meaning</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">VOCABULARY RETENTION</div>
+            <ul class="info-list">
+                <li>Active recall</li>
+                <li>Spaced repetition</li>
+                <li>Repeated exposure</li>
+                <li>Contextual application</li>
+            </ul>
+        </div>
+        <div class="info-section" style="margin-top:16px; background:#f8fafc; padding:10px; border-radius:6px; border:1px solid #e2e8f0;">
+            <div class="info-title" style="color:#475569;">RESOURCES</div>
+            <div style="font-size:11px; margin-bottom:4px;"><strong style="color:#334155;">RESOURCE WORKFLOW:</strong> Barron's 800 (Core vocabulary) · Manhattan 500 Essential (Essential reinforcement) · Manhattan 500 Advanced (Advanced reinforcement) · GregMat (GRE-specific strategy) · ETS (Apply in authentic TC/SE/RC)</div>
+        </div>
+    </div>
+</div>
+<div class="card p0">
+    <div class="card-header">
+
+        <label class="item-header">
+            <input type="checkbox" id="gre-v2">
+            <span class="check"></span>
+            <h3 class="card-title">6. TEXT COMPLETION</h3>
+        </label>
+        <div class="card-meta">
+            <span class="badge p0">P0</span>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="info-section">
+            <div class="info-title">SENTENCE STRUCTURE & CONTEXT</div>
+            <ul class="info-list">
+                <li>Sentence structure</li>
+                <li>Context clues</li>
+                <li>Grammatical relationships</li>
+                <li>Logical relationships</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">PREDICTION</div>
+            <ul class="info-list">
+                <li>Predicting before seeing choices</li>
+                <li>Blank meaning</li>
+                <li>Sentence-level prediction</li>
+                <li>Paragraph-level prediction</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">LOGICAL RELATIONSHIPS</div>
+            <ul class="info-list">
+                <li>Contrast</li>
+                <li>Support</li>
+                <li>Cause / effect</li>
+                <li>Continuation</li>
+                <li>Qualification</li>
+                <li>Shifts</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">QUESTION STRUCTURE</div>
+            <ul class="info-list">
+                <li>One blank</li>
+                <li>Two blanks</li>
+                <li>Three blanks</li>
+                <li>Blank interaction</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">TRAP ANSWERS</div>
+            <ul class="info-list">
+                <li>Synonym traps</li>
+                <li>Context mismatch</li>
+                <li>Partial-fit answers</li>
+                <li>Tone mismatch</li>
+                <li>Logical mismatch</li>
+            </ul>
+        </div>
+        <div class="info-section" style="margin-top:16px;">
+            <div class="info-title">SKILLS & STRATEGIES</div>
+            <ul class="info-list">
+                <li>Predict</li>
+                <li>Identify sentence logic</li>
+                <li>Use vocabulary in context</li>
+                <li>Eliminate traps</li>
+                <li>Verify the completed sentence</li>
+            </ul>
+        </div>
+        <div class="info-section" style="margin-top:16px; background:#f8fafc; padding:10px; border-radius:6px; border:1px solid #e2e8f0;">
+            <div class="info-title" style="color:#475569;">RESOURCES</div>
+            <div style="font-size:11px; margin-bottom:4px;"><strong style="color:#334155;">GREGMAT:</strong> TC lessons · Verbal strategy · TC practice</div>
+            <div style="font-size:11px; margin-bottom:4px;"><strong style="color:#334155;">ETS:</strong> Official TC questions</div>
+            <div style="font-size:11px; margin-bottom:4px;"><strong style="color:#334155;">5 LB.:</strong> TC practice</div>
+            <div style="font-size:11px; margin-bottom:4px;"><strong style="color:#334155;">VOCABULARY:</strong> Barron's 800 · Manhattan 500 Flashcards</div>
+        </div>
+    </div>
+</div>
+<div class="card p0">
+    <div class="card-header">
+
+        <label class="item-header">
+            <input type="checkbox" id="gre-v3">
+            <span class="check"></span>
+            <h3 class="card-title">7. SENTENCE EQUIVALENCE</h3>
+        </label>
+        <div class="card-meta">
+            <span class="badge p0">P0</span>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="info-section">
+            <div class="info-title">SENTENCE MEANING</div>
+            <ul class="info-list">
+                <li>Sentence structure</li>
+                <li>Context</li>
+                <li>Overall meaning</li>
+                <li>Logical relationships</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">PREDICTION</div>
+            <ul class="info-list">
+                <li>Predict missing meaning</li>
+                <li>Predict before viewing choices</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">VOCABULARY RELATIONSHIPS</div>
+            <ul class="info-list">
+                <li>Synonyms</li>
+                <li>Near-synonyms</li>
+                <li>Contextual equivalence</li>
+                <li>Tone</li>
+                <li>Intensity</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">ANSWER PAIRS</div>
+            <ul class="info-list">
+                <li>Selecting two answers</li>
+                <li>Equivalent completed sentences</li>
+                <li>Trap pairs</li>
+                <li>Lexical vs contextual similarity</li>
+            </ul>
+        </div>
+        <div class="info-section" style="margin-top:16px;">
+            <div class="info-title">SKILLS & STRATEGIES</div>
+            <ul class="info-list">
+                <li>Predict</li>
+                <li>Identify sentence meaning</li>
+                <li>Find equivalent answer pair</li>
+                <li>Reject synonym traps</li>
+                <li>Verify both completed sentences</li>
+            </ul>
+        </div>
+        <div class="info-section" style="margin-top:16px; background:#f8fafc; padding:10px; border-radius:6px; border:1px solid #e2e8f0;">
+            <div class="info-title" style="color:#475569;">RESOURCES</div>
+            <div style="font-size:11px; margin-bottom:4px;"><strong style="color:#334155;">GREGMAT:</strong> SE lessons · SE strategy · Vocabulary strategy</div>
+            <div style="font-size:11px; margin-bottom:4px;"><strong style="color:#334155;">ETS:</strong> Official SE questions</div>
+            <div style="font-size:11px; margin-bottom:4px;"><strong style="color:#334155;">5 LB.:</strong> SE practice</div>
+            <div style="font-size:11px; margin-bottom:4px;"><strong style="color:#334155;">VOCABULARY:</strong> Barron's 800 · Manhattan 500 Flashcards</div>
+        </div>
+    </div>
+</div>
+<div class="card p0">
+    <div class="card-header">
+
+        <label class="item-header">
+            <input type="checkbox" id="gre-v4">
+            <span class="check"></span>
+            <h3 class="card-title">8. READING COMPREHENSION</h3>
+        </label>
+        <div class="card-meta">
+            <span class="badge p0">P0</span>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="info-section">
+            <div class="info-title">PASSAGE STRUCTURE</div>
+            <ul class="info-list">
+                <li>Main idea</li>
+                <li>Primary purpose</li>
+                <li>Passage organization</li>
+                <li>Paragraph function</li>
+                <li>Sentence function</li>
+                <li>Argument progression</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">AUTHOR & ARGUMENT</div>
+            <ul class="info-list">
+                <li>Author position</li>
+                <li>Author attitude</li>
+                <li>Tone</li>
+                <li>Claims</li>
+                <li>Evidence</li>
+                <li>Assumptions</li>
+                <li>Logical relationships</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">QUESTION TYPES</div>
+            <ul class="info-list">
+                <li>Main idea</li>
+                <li>Primary purpose</li>
+                <li>Detail</li>
+                <li>Inference</li>
+                <li>Function</li>
+                <li>Author attitude</li>
+                <li>Logical inference</li>
+                <li>Strengthen</li>
+                <li>Weaken</li>
+                <li>Resolve</li>
+                <li>Compare viewpoints</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">PASSAGE TYPES</div>
+            <ul class="info-list">
+                <li>Humanities</li>
+                <li>Social sciences</li>
+                <li>Natural sciences</li>
+                <li>History</li>
+                <li>Arts</li>
+                <li>Philosophy</li>
+                <li>General informational passages</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">ADVANCED READING SKILLS</div>
+            <ul class="info-list">
+                <li>Dense prose</li>
+                <li>Long sentences</li>
+                <li>Abstract arguments</li>
+                <li>Implicit assumptions</li>
+                <li>Competing viewpoints</li>
+                <li>Complex argument structures</li>
+                <li>Trap-answer elimination</li>
+            </ul>
+        </div>
+        <div class="info-section" style="margin-top:16px;">
+            <div class="info-title">SKILLS & STRATEGIES</div>
+            <ul class="info-list">
+                <li>Understand structure</li>
+                <li>Identify main point</li>
+                <li>Track argument progression</li>
+                <li>Identify evidence</li>
+                <li>Make justified inferences</li>
+                <li>Eliminate unsupported answers</li>
+                <li>Recognize trap answers</li>
+            </ul>
+        </div>
+        <div class="info-section" style="margin-top:16px; background:#f8fafc; padding:10px; border-radius:6px; border:1px solid #e2e8f0;">
+            <div class="info-title" style="color:#475569;">RESOURCES</div>
+            <div style="font-size:11px; margin-bottom:4px;"><strong style="color:#334155;">GREGMAT:</strong> RC strategy · Reading lessons · Verbal practice</div>
+            <div style="font-size:11px; margin-bottom:4px;"><strong style="color:#334155;">ETS:</strong> Official RC questions</div>
+            <div style="font-size:11px; margin-bottom:4px;"><strong style="color:#334155;">5 LB.:</strong> RC practice</div>
+        </div>
+    </div>
+</div>
+<div class="section-divider"><h2>P0 — ANALYTICAL WRITING</h2></div>
+<div class="card p0">
+    <div class="card-header">
+
+        <label class="item-header">
+            <input type="checkbox" id="gre-w1">
+            <span class="check"></span>
+            <h3 class="card-title">9. ANALYZE AN ISSUE</h3>
+        </label>
+        <div class="card-meta">
+            <span class="badge p0">P0</span>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="info-section">
+            <div class="info-title">PROMPT ANALYSIS</div>
+            <ul class="info-list">
+                <li>Understand the issue</li>
+                <li>Identify the exact task</li>
+                <li>Identify what the prompt asks</li>
+                <li>Identify constraints</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">POSITION & REASONING</div>
+            <ul class="info-list">
+                <li>Take a position</li>
+                <li>Develop reasons</li>
+                <li>Qualify claims</li>
+                <li>Recognize exceptions</li>
+                <li>Build nuanced positions</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">EXAMPLES & EVIDENCE</div>
+            <ul class="info-list">
+                <li>Generate examples</li>
+                <li>Select relevant examples</li>
+                <li>Explain examples</li>
+                <li>Connect examples to claims</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">COUNTERARGUMENT & COMPLEXITY</div>
+            <ul class="info-list">
+                <li>Alternative perspectives</li>
+                <li>Counterarguments</li>
+                <li>Exceptions</li>
+                <li>Circumstances</li>
+                <li>Nuance</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">ESSAY STRUCTURE</div>
+            <ul class="info-list">
+                <li>Introduction</li>
+                <li>Thesis / position</li>
+                <li>Body development</li>
+                <li>Transitions</li>
+                <li>Conclusion</li>
+                <li>Coherence</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">LANGUAGE</div>
+            <ul class="info-list">
+                <li>Sentence clarity</li>
+                <li>Word choice</li>
+                <li>Grammar</li>
+                <li>Precision</li>
+                <li>Variety</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">TIMING</div>
+            <ul class="info-list">
+                <li>Planning</li>
+                <li>Writing</li>
+                <li>Review</li>
+                <li>30-minute execution</li>
+            </ul>
+        </div>
+        <div class="info-section" style="margin-top:16px; background:#f8fafc; padding:10px; border-radius:6px; border:1px solid #e2e8f0;">
+            <div class="info-title" style="color:#475569;">RESOURCES</div>
+            <div style="font-size:11px; margin-bottom:4px;"><strong style="color:#334155;">PRACTICE:</strong> Brainstorming · Untimed planning · 10-minute planning drills · 30-minute essays · Post-essay review · Rewriting weak sections</div>
+            <div style="font-size:11px; margin-bottom:4px;"><strong style="color:#334155;">GREGMAT:</strong> Issue strategy · Essay methodology · Structure · Examples · Practice</div>
+            <div style="font-size:11px; margin-bottom:4px;"><strong style="color:#334155;">ETS:</strong> Official Issue Topic Pool · Official sample essays · Scoring guidance · Rater commentary</div>
+        </div>
+    </div>
+</div>
+<div class="section-divider"><h2>P1 — CROSS-CUTTING SKILLS</h2></div>
+<div class="card p1">
+    <div class="card-header">
+
+        <h3 class="card-title-plain">TEST-TAKING SKILLS</h3>
+        <div class="card-meta">
+            <span class="badge p1">P1</span>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="info-section">
+            <div class="info-title">TIME MANAGEMENT</div>
+            <ul class="info-list">
+                <li>Section timing</li>
+                <li>Question pacing</li>
+                <li>Time checkpoints</li>
+                <li>Avoiding overinvestment</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">QUESTION SELECTION</div>
+            <ul class="info-list">
+                <li>Easy vs difficult</li>
+                <li>Skip / return</li>
+                <li>Strategic sequencing</li>
+                <li>Recognizing time sinks</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">ANSWER STRATEGIES</div>
+            <ul class="info-list">
+                <li>Elimination</li>
+                <li>Strategic guessing</li>
+                <li>Testing choices</li>
+                <li>Calculator use</li>
+                <li>Estimation</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">MENTAL EXECUTION</div>
+            <ul class="info-list">
+                <li>Focus</li>
+                <li>Endurance</li>
+                <li>Recovering after difficult questions</li>
+                <li>Avoiding panic</li>
+                <li>Maintaining pace</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="section-divider"><h2>P1 — ERROR ANALYSIS & CALIBRATION</h2></div>
+<div class="card p1">
+    <div class="card-header">
+
+        <label class="item-header">
+            <input type="checkbox" id="gre-e1">
+            <span class="check"></span>
+            <h3 class="card-title">10. ERROR ANALYSIS SYSTEM</h3>
+        </label>
+        <div class="card-meta">
+            <span class="badge p1">P1</span>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="info-section">
+            <div class="info-title">KNOWLEDGE ERRORS</div>
+            <ul class="info-list">
+                <li>Concept gap</li>
+                <li>Vocabulary gap</li>
+                <li>Formula / rule gap</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">STRATEGY ERRORS</div>
+            <ul class="info-list">
+                <li>Wrong approach</li>
+                <li>Inefficient approach</li>
+                <li>Failed to recognize useful strategy</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">EXECUTION ERRORS</div>
+            <ul class="info-list">
+                <li>Arithmetic mistake</li>
+                <li>Algebra mistake</li>
+                <li>Misread</li>
+                <li>Careless error</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">REASONING ERRORS</div>
+            <ul class="info-list">
+                <li>Logic failure</li>
+                <li>Unsupported inference</li>
+                <li>Trap answer</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">TIME ERRORS</div>
+            <ul class="info-list">
+                <li>Too slow</li>
+                <li>Poor question selection</li>
+                <li>Overinvestment</li>
+            </ul>
+        </div>
+        <div class="info-section" style="margin-top:16px;">
+            <div class="info-title">SKILLS & STRATEGIES</div>
+            <ul class="info-list">
+                <li>Error Loop: Mistake → Diagnose → Classify → Identify root cause → Remediate → Reattempt → Verify</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="card p1">
+    <div class="card-header">
+
+        <label class="item-header">
+            <input type="checkbox" id="gre-c1">
+            <span class="check"></span>
+            <h3 class="card-title">11. ETS CALIBRATION</h3>
+        </label>
+        <div class="card-meta">
+            <span class="badge p1">P1</span>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="info-section">
+            <div class="info-title">EARLY PHASE</div>
+            <ul class="info-list">
+                <li>GREGMAT: Primary learning</li>
+                <li>5 LB.: Reinforcement</li>
+                <li>ETS: Small official batches</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">MIDDLE PHASE</div>
+            <ul class="info-list">
+                <li>GREGMAT: Concepts / weaknesses</li>
+                <li>5 LB.: Practice volume</li>
+                <li>ETS: Increasing official practice</li>
+            </ul>
+        </div>
+        <div class="info-section">
+            <div class="info-title">FINAL PHASE</div>
+            <ul class="info-list">
+                <li>ETS: Dominant</li>
+                <li>GREGMAT: Targeted remediation</li>
+                <li>5 LB.: Targeted reinforcement</li>
+            </ul>
+        </div>
+        <div class="info-section" style="margin-top:16px;">
+            <div class="info-title">SKILLS & STRATEGIES</div>
+            <ul class="info-list">
+                <li>CORE RULE: ETS = FINAL GROUND TRUTH</li>
+            </ul>
+        </div>
+    </div>
+</div>
+</div>
+
+<script>
+(function() {
+    const STORAGE_KEY = 'gre-checklist';
+
+    function saveState() {
+        const checks = {};
+        document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
+            if (cb.id) checks[cb.id] = cb.checked;
+        });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(checks));
+    }
+
+    function loadState() {
+        try {
+            var data = localStorage.getItem(STORAGE_KEY);
+            if (!data) return;
+            var checks = JSON.parse(data);
+            Object.keys(checks).forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) el.checked = checks[id];
+            });
+        } catch(e) {}
+    }
+
+    function updateProgress() {
+        var totalChecked = 0, totalItems = 0;
+        document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
+            totalItems++;
+            if (cb.checked) totalChecked++;
+        });
+        
+        var of = document.getElementById('overall-fill');
+        var ot = document.getElementById('overall-text');
+        var pct = totalItems ? Math.round(totalChecked / totalItems * 100) : 0;
+        if (of) of.style.width = pct + '%';
+        if (ot) ot.textContent = totalChecked + ' / ' + totalItems + ' (' + pct + '%)';
+    }
+
+    window.resetAll = function() {
+        if (!confirm('Reset all progress on this page? This cannot be undone.')) return;
+        localStorage.removeItem(STORAGE_KEY);
+
+        document.querySelectorAll('.info-list li').forEach(function(li, idx) {
+            li.classList.remove('struck-through');
+            localStorage.removeItem('gre-li-' + idx);
+        });
+        
+        document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
+            cb.checked = false;
+        });
+
+        updateProgress();
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // Strikethrough logic for small topics
+        document.querySelectorAll('.info-list li').forEach(function(li, idx) {
+            var key = 'gre-li-' + idx;
+            if (localStorage.getItem(key) === 'true') {
+                li.classList.add('struck-through');
+            }
+            li.addEventListener('click', function(e) {
+                li.classList.toggle('struck-through');
+                localStorage.setItem(key, li.classList.contains('struck-through'));
+            });
+        });
+        
+        loadState();
+
+        updateProgress();
+        document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
+            cb.addEventListener('change', function() {
+                saveState();
+                updateProgress();
+            });
+        });
+    });
+})();
+</script>
+</body>
+</html>
