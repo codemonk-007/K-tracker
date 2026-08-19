@@ -141,6 +141,7 @@ body {
     }
 }
 </style>
+<script src="sync.js"></script>
 </head>
 <body>
 <nav class="nav">
@@ -1742,18 +1743,23 @@ body {
             if (cb.id) checks[cb.id] = cb.checked;
         });
         localStorage.setItem(STORAGE_KEY, JSON.stringify(checks));
+        GistSync.save(STORAGE_KEY, checks);
     }
 
-    function loadState() {
-        try {
-            var data = localStorage.getItem(STORAGE_KEY);
-            if (!data) return;
-            var checks = JSON.parse(data);
-            Object.keys(checks).forEach(function(id) {
-                var el = document.getElementById(id);
-                if (el) el.checked = checks[id];
-            });
-        } catch(e) {}
+    async function loadState() {
+        var remote = await GistSync.init();
+        var data;
+        if (remote && remote[STORAGE_KEY]) {
+            data = remote[STORAGE_KEY];
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        } else {
+            var local = localStorage.getItem(STORAGE_KEY);
+            if (!local) return;
+            data = JSON.parse(local);
+        }
+        document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
+            if (cb.id && data[cb.id]) cb.checked = true;
+        });
     }
 
     function updateProgress() {
@@ -1786,8 +1792,8 @@ body {
         updateProgress();
     };
 
-    document.addEventListener('DOMContentLoaded', function() {
-        loadState();
+    document.addEventListener('DOMContentLoaded', async function() {
+        await loadState();
         updateProgress();
         document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
             cb.addEventListener('change', function() {

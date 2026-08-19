@@ -44,6 +44,7 @@ body {
     .header h1 { font-size: 20px; } .card { padding: 18px; } .card h2 { font-size: 15px; }
 }
 </style>
+<script src="sync.js"></script>
 </head>
 <body>
 <div class="container">
@@ -134,5 +135,16 @@ body {
     });
 })();
 </script>
+
+<script>
+function setupSync() {
+    var id = prompt("Enter your GitHub Gist ID:");
+    if (!id) return;
+    var token = prompt("Enter your GitHub Personal Access Token (PAT):");
+    if (!token) return;
+    GistSync.setCredentials(id.trim(), token.trim());
+}
+</script>
 </body>
+
 </html>
