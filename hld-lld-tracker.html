@@ -1723,7 +1723,7 @@ body {
             <div class="card-header">
                 <h3 class="card-title">P1 — High-Value HLD</h3>
                 <div class="card-meta">
-                    <span class="progress-text">0/1</span>
+                    <span class="progress-text">0/18</span>
                     <span class="badge p1">P1</span>
                 </div>
             </div>
@@ -1731,11 +1731,129 @@ body {
             <div class="card-body">
                 <div class="list-group-title">Systems</div>
                 <label class="item">
-                    <input type="checkbox" id="spractice-597">
+                    <input type="checkbox" id="spractice-5970">
                     <span class="check"></span>
                     <div class="item-content">
-                        <div class="cluster-title">Systems (one checkbox each)</div>
-                        <div class="cluster-detail">Instagram · YouTube · Uber · E-commerce system · Ticket booking system · Distributed cache · Distributed lock service · Logging system · Metrics / monitoring system · Web crawler · Recommendation system · Ad serving system · API gateway · Pub/Sub system · Configuration management · Feature flag system · Distributed counter · Leaderboard system</div>
+                        <div class="cluster-title">Instagram</div>
+                    </div>
+                </label>
+                <label class="item">
+                    <input type="checkbox" id="spractice-5971">
+                    <span class="check"></span>
+                    <div class="item-content">
+                        <div class="cluster-title">YouTube</div>
+                    </div>
+                </label>
+                <label class="item">
+                    <input type="checkbox" id="spractice-5972">
+                    <span class="check"></span>
+                    <div class="item-content">
+                        <div class="cluster-title">Uber</div>
+                    </div>
+                </label>
+                <label class="item">
+                    <input type="checkbox" id="spractice-5973">
+                    <span class="check"></span>
+                    <div class="item-content">
+                        <div class="cluster-title">E-commerce system</div>
+                    </div>
+                </label>
+                <label class="item">
+                    <input type="checkbox" id="spractice-5974">
+                    <span class="check"></span>
+                    <div class="item-content">
+                        <div class="cluster-title">Ticket booking system</div>
+                    </div>
+                </label>
+                <label class="item">
+                    <input type="checkbox" id="spractice-5975">
+                    <span class="check"></span>
+                    <div class="item-content">
+                        <div class="cluster-title">Distributed cache</div>
+                    </div>
+                </label>
+                <label class="item">
+                    <input type="checkbox" id="spractice-5976">
+                    <span class="check"></span>
+                    <div class="item-content">
+                        <div class="cluster-title">Distributed lock service</div>
+                    </div>
+                </label>
+                <label class="item">
+                    <input type="checkbox" id="spractice-5977">
+                    <span class="check"></span>
+                    <div class="item-content">
+                        <div class="cluster-title">Logging system</div>
+                    </div>
+                </label>
+                <label class="item">
+                    <input type="checkbox" id="spractice-5978">
+                    <span class="check"></span>
+                    <div class="item-content">
+                        <div class="cluster-title">Metrics / monitoring system</div>
+                    </div>
+                </label>
+                <label class="item">
+                    <input type="checkbox" id="spractice-5979">
+                    <span class="check"></span>
+                    <div class="item-content">
+                        <div class="cluster-title">Web crawler</div>
+                    </div>
+                </label>
+                <label class="item">
+                    <input type="checkbox" id="spractice-5980">
+                    <span class="check"></span>
+                    <div class="item-content">
+                        <div class="cluster-title">Recommendation system</div>
+                    </div>
+                </label>
+                <label class="item">
+                    <input type="checkbox" id="spractice-5981">
+                    <span class="check"></span>
+                    <div class="item-content">
+                        <div class="cluster-title">Ad serving system</div>
+                    </div>
+                </label>
+                <label class="item">
+                    <input type="checkbox" id="spractice-5982">
+                    <span class="check"></span>
+                    <div class="item-content">
+                        <div class="cluster-title">API gateway</div>
+                    </div>
+                </label>
+                <label class="item">
+                    <input type="checkbox" id="spractice-5983">
+                    <span class="check"></span>
+                    <div class="item-content">
+                        <div class="cluster-title">Pub/Sub system</div>
+                    </div>
+                </label>
+                <label class="item">
+                    <input type="checkbox" id="spractice-5984">
+                    <span class="check"></span>
+                    <div class="item-content">
+                        <div class="cluster-title">Configuration management</div>
+                    </div>
+                </label>
+                <label class="item">
+                    <input type="checkbox" id="spractice-5985">
+                    <span class="check"></span>
+                    <div class="item-content">
+                        <div class="cluster-title">Feature flag system</div>
+                    </div>
+                </label>
+                <label class="item">
+                    <input type="checkbox" id="spractice-5986">
+                    <span class="check"></span>
+                    <div class="item-content">
+                        <div class="cluster-title">Distributed counter</div>
+                    </div>
+                </label>
+                <label class="item">
+                    <input type="checkbox" id="spractice-5987">
+                    <span class="check"></span>
+                    <div class="item-content">
+                        <div class="cluster-title">Leaderboard system</div>
                     </div>
                 </label>
             </div>
@@ -2025,14 +2143,21 @@ function switchTab(name) {
 
     window.resetAll = function() {
         if (!confirm('Reset all progress on this page? This cannot be undone.')) return;
-        localStorage.removeItem(STORAGE_KEY);
         document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
             cb.checked = false;
         });
+        saveState();
         updateProgress();
     };
 
     document.addEventListener('DOMContentLoaded', async function() {
+
+    // Scroll active nav link into view on mobile
+    var activeNav = document.querySelector('.nav a.active');
+    if (activeNav) {
+        activeNav.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+
         await loadState();
         updateProgress();
         document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
@@ -2103,10 +2228,10 @@ function switchTab(name) {
 
     window.resetAll = function() {
         if (!confirm('Reset all progress on this page? This cannot be undone.')) return;
-        localStorage.removeItem(STORAGE_KEY);
         document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
             cb.checked = false;
         });
+        saveState();
         updateProgress();
     };
 
@@ -2123,6 +2248,13 @@ function switchTab(name) {
     };
 
     document.addEventListener('DOMContentLoaded', async function() {
+
+    // Scroll active nav link into view on mobile
+    var activeNav = document.querySelector('.nav a.active');
+    if (activeNav) {
+        activeNav.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+
         await loadState();
         updateProgress();
         document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
