@@ -458,7 +458,24 @@ body {
 @media (max-width: 700px) {
     .tab-btn { padding: 9px 12px; font-size: 10px; letter-spacing: 0.3px; }
 }
+
+@media (max-width: 600px) {
+    .nav {
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 6px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; /* Firefox */
+    }
+    .nav::-webkit-scrollbar { display: none; } /* Chrome */
+    .nav a {
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+}
 </style>
+
 
 <script src="sync.js"></script>
 </head>

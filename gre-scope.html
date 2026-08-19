@@ -133,7 +133,24 @@ body {
 }
 
 .info-list li.struck-through { text-decoration: line-through; opacity: 0.45; }
+
+@media (max-width: 600px) {
+    .nav {
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 6px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; /* Firefox */
+    }
+    .nav::-webkit-scrollbar { display: none; } /* Chrome */
+    .nav a {
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+}
 </style>
+
 
 <script src="sync.js"></script>
 </head>
@@ -1197,6 +1214,11 @@ body {
         document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
             if (cb.id) checks[cb.id] = cb.checked;
         });
+        document.querySelectorAll('.info-list li').forEach(function(li, idx) {
+            if (li.classList.contains('struck-through')) {
+                checks['gre-li-' + idx] = true;
+            }
+        });
         localStorage.setItem(STORAGE_KEY, JSON.stringify(checks));
         GistSync.save(STORAGE_KEY, checks);
     }
@@ -1214,6 +1236,13 @@ body {
         }
         document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
             if (cb.id && data[cb.id]) cb.checked = true;
+        });
+        document.querySelectorAll('.info-list li').forEach(function(li, idx) {
+            if (data['gre-li-' + idx]) {
+                li.classList.add('struck-through');
+            } else {
+                li.classList.remove('struck-through');
+            }
         });
     }
 
@@ -1257,7 +1286,7 @@ body {
             }
             li.addEventListener('click', function(e) {
                 li.classList.toggle('struck-through');
-                localStorage.setItem(key, li.classList.contains('struck-through'));
+                saveState();
             });
         });
         
