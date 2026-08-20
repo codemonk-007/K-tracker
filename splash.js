@@ -1,8 +1,7 @@
 (function() {
-    // Only run on mobile PWA (standalone mode)
-    var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    // Only run on mobile
     var isMobile = window.innerWidth <= 768;
-    if (!isStandalone || !isMobile) return;
+    if (!isMobile) return;
 
     // Only show on fresh app launch, not on in-session page jumps
     if (sessionStorage.getItem('splash-shown')) return;
@@ -24,26 +23,17 @@
             transition: opacity 0.7s ease;
         }
         #ms-splash-logo {
-            width: 88px;
-            height: 88px;
-            background: linear-gradient(135deg, #1e293b, #334155);
-            border-radius: 22px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 42px;
-            font-weight: 700;
-            color: #f1f5f9;
-            font-family: 'Inter', -apple-system, sans-serif;
-            box-shadow: 0 0 0 0 rgba(99,102,241,0.4);
+            width: 140px;
+            height: 140px;
+            border-radius: 28px;
             opacity: 0;
             transform: scale(0.6);
             transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+            object-fit: cover;
         }
         #ms-splash-logo.show {
             opacity: 1;
             transform: scale(1);
-            box-shadow: 0 0 40px rgba(99,102,241,0.25);
         }
         #ms-splash-title {
             font-family: 'Inter', -apple-system, sans-serif;
@@ -82,9 +72,10 @@
     var splash = document.createElement('div');
     splash.id = 'ms-splash';
 
-    var logo = document.createElement('div');
+    var logo = document.createElement('img');
     logo.id = 'ms-splash-logo';
-    logo.textContent = 'M';
+    logo.src = 'icon-192.png';
+    logo.alt = 'Master Scope';
 
     var title = document.createElement('div');
     title.id = 'ms-splash-title';
@@ -99,11 +90,6 @@
     document.body.prepend(splash);
 
     // Animation timeline — total 3 seconds
-    // 300ms  → logo scales in
-    // 800ms  → title + dot fades up
-    // 2300ms → start fade out
-    // 3000ms → remove from DOM
-
     setTimeout(function() { logo.classList.add('show'); }, 300);
     setTimeout(function() {
         title.classList.add('show');
