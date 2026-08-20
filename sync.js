@@ -138,8 +138,8 @@ const GistSync = (function() {
         setCredentials: function(id, token) {
             localStorage.setItem(GIST_ID_KEY, id);
             localStorage.setItem(GITHUB_TOKEN_KEY, token);
-            alert('Credentials saved! The app will now sync with GitHub.');
-            location.reload();
+            showToast('Cloud Connected! Reloading...', '#22c55e');
+            setTimeout(function() { location.reload(); }, 1000);
         }
     };
 })();
