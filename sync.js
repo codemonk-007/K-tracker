@@ -2,6 +2,7 @@ const GistSync = (function() {
     const GIST_ID_KEY = 'gist_id';
     const GITHUB_TOKEN_KEY = 'github_token';
     const FILENAME = 'k-tracker-sync.json';
+
     function showToast(msg, color) {
         if (!document.getElementById('sync-toast-styles')) {
             const style = document.createElement('style');
@@ -17,7 +18,7 @@ const GistSync = (function() {
                     font-weight: 600;
                     color: white;
                     z-index: 9999;
-                    transition: opacity 0.3s, top 0.3s, bottom 0.3s;
+                    transition: opacity 0.3s;
                     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
                     opacity: 0;
                     pointer-events: none;
@@ -33,7 +34,6 @@ const GistSync = (function() {
             `;
             document.head.appendChild(style);
         }
-        
         let toast = document.getElementById('sync-toast');
         if (!toast) {
             toast = document.createElement('div');
@@ -44,17 +44,18 @@ const GistSync = (function() {
         toast.textContent = msg;
         toast.style.opacity = '1';
         if (window.toastTimeout) clearTimeout(window.toastTimeout);
-        if (msg !== 'Syncing...' && msg !== 'Fetching...') {
-            window.toastTimeout = setTimeout(() => { toast.style.opacity = '0'; }, 3000);
-        }
+        window.toastTimeout = setTimeout(() => { toast.style.opacity = '0'; }, 3000);
     }
-    let remoteData = null; 
+
+    let remoteData = null;
+
     function getCredentials() {
         return {
             id: localStorage.getItem(GIST_ID_KEY),
             token: localStorage.getItem(GITHUB_TOKEN_KEY)
         };
     }
+
     async function fetchGist() {
         const creds = getCredentials();
         if (!creds.id || !creds.token) return null;
@@ -70,18 +71,29 @@ const GistSync = (function() {
             if (data && data.files && data.files[FILENAME]) {
                 const content = data.files[FILENAME].content;
                 remoteData = content ? JSON.parse(content) : {};
-                return remoteData;
             } else if (data && data.files) {
-                 // The file might not exist yet in a new gist, create it
-                 remoteData = {};
-                return remoteData;
+                remoteData = {};
+            } else {
+                return null;
             }
+
+            // Store ALL namespaces into localStorage so pages can read without re-fetching
+            Object.keys(remoteData).forEach(function(key) {
+                try {
+                    localStorage.setItem(key, JSON.stringify(remoteData[key]));
+                } catch(e) {}
+            });
+
+            // Signal that a fresh preload has been done this session
+            sessionStorage.setItem('gist-preloaded', '1');
+
+            return remoteData;
         } catch (e) {
             console.error('Error fetching gist', e);
         }
         return null;
     }
-    // Debounce save to prevent rate limiting
+
     let saveTimeout = null;
     async function saveToGist(dataObj) {
         showToast("Syncing...", "#3b82f6");
@@ -103,12 +115,12 @@ const GistSync = (function() {
                     }
                 })
             });
-            console.log('Synced to Gist successfully');
             showToast('Saved to Cloud ☁️', '#22c55e');
         } catch (e) {
             console.error('Error saving gist', e);
         }
     }
+
     return {
         init: async function() {
             return await fetchGist();
@@ -116,10 +128,12 @@ const GistSync = (function() {
         save: function(namespace, localState) {
             if (!remoteData) remoteData = {};
             remoteData[namespace] = localState;
+            // Also update localStorage immediately
+            try { localStorage.setItem(namespace, JSON.stringify(localState)); } catch(e) {}
             if (saveTimeout) clearTimeout(saveTimeout);
             saveTimeout = setTimeout(() => {
                 saveToGist(remoteData);
-            }, 1000); // 1 second debounce
+            }, 1000);
         },
         setCredentials: function(id, token) {
             localStorage.setItem(GIST_ID_KEY, id);

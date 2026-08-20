@@ -1794,15 +1794,23 @@ body {
     }
 
     async function loadState() {
-        var remote = await GistSync.init();
         var data;
-        if (remote && remote[STORAGE_KEY]) {
-            data = remote[STORAGE_KEY];
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        if (sessionStorage.getItem('gist-preloaded')) {
+            // Data was preloaded by splash - read directly from localStorage
+            var cached = localStorage.getItem(STORAGE_KEY);
+            if (!cached) return;
+            data = JSON.parse(cached);
         } else {
-            var local = localStorage.getItem(STORAGE_KEY);
-            if (!local) return;
-            data = JSON.parse(local);
+            // Fallback: fetch from Gist (browser tab, first use without splash)
+            var remote = await GistSync.init();
+            if (remote && remote[STORAGE_KEY]) {
+                data = remote[STORAGE_KEY];
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            } else {
+                var local = localStorage.getItem(STORAGE_KEY);
+                if (!local) return;
+                data = JSON.parse(local);
+            }
         }
         document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
             if (cb.id && data[cb.id]) cb.checked = true;
