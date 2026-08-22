@@ -1253,37 +1253,30 @@ body {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(checks));
         GistSync.save(STORAGE_KEY, checks);
     }
-
     async function loadState() {
-        var data;
-        if (sessionStorage.getItem('gist-preloaded')) {
-            // Data was preloaded by splash - read directly from localStorage
-            var cached = localStorage.getItem(STORAGE_KEY);
-            if (!cached) return;
-            data = JSON.parse(cached);
-        } else {
-            // Fallback: fetch from Gist (browser tab, first use without splash)
+        // 1. Instant load from localStorage for zero layout shift
+        var local = localStorage.getItem(STORAGE_KEY);
+        if (local) {
+            var data = JSON.parse(local);
+            document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
+                if (cb.id) cb.checked = !!data[cb.id];
+            });
+            if (typeof updateProgress === 'function') updateProgress(true);
+        }
+
+        // 2. Background fetch to ensure absolute freshness (e.g. if extension updated Gist)
+        try {
             var remote = await GistSync.init();
             if (remote && remote[STORAGE_KEY]) {
-                data = remote[STORAGE_KEY];
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-            } else {
-                var local = localStorage.getItem(STORAGE_KEY);
-                if (!local) return;
-                data = JSON.parse(local);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(remote[STORAGE_KEY]));
+                document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
+                    if (cb.id) cb.checked = !!remote[STORAGE_KEY][cb.id];
+                });
+                if (typeof updateProgress === 'function') updateProgress(true);
             }
+        } catch (e) {
+            console.error("Background sync failed", e);
         }
-        document.querySelectorAll('.card input[type="checkbox"]').forEach(function(cb) {
-            if (cb.id && data[cb.id]) cb.checked = true;
-        });
-        document.querySelectorAll('.info-list li').forEach(function(li, idx) {
-            if (data['gre-li-' + idx]) {
-                li.classList.add('struck-through');
-            } else {
-                li.classList.remove('struck-through');
-            }
-        });
-        if (typeof updateProgress === 'function') updateProgress(true);
     }
 
     function updateProgress(skipSave = false) {
